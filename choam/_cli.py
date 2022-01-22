@@ -67,6 +67,4 @@ class CommandLineInterface:
       
       args_dict[arg] = arg_value
     
-    print(args_dict)
-    
-    # method(**args_dict)
+    method(**args_dict)
