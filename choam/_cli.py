@@ -3,6 +3,7 @@
 #     #  do something
 
 import sys
+from inspect import signature
 
 class CommandLineInterface:
   '''
@@ -40,4 +41,32 @@ class CommandLineInterface:
       command
     )
     
-    method(self.__arguments[2:])
+    arg_signature = str(signature(method)).replace('(', '').replace(')', '')
+    
+    args_list = []
+    
+    for arg in arg_signature.split(","):
+      arg = arg.split(":")[0].strip()
+      
+      args_list.append(arg)
+    
+    args_dict = {}
+    for arg_index, arg in enumerate(args_list):
+      
+      if arg_index < len(args_list) - 1:
+        arg_value = sys.argv[arg_index + 2]
+        
+      elif len(sys.argv) - 1 > arg_index + 1:
+        arg_value = sys.argv[arg_index + 2:]
+        
+        if len(arg_value) == 1: 
+          arg_value = arg_value[0]
+        
+      else:
+        raise IndexError(f"Failed to run command: '{command}': was not supplied enough arguments")
+      
+      args_dict[arg] = arg_value
+    
+    print(args_dict)
+    
+    # method(**args_dict)
