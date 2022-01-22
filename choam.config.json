@@ -1,0 +1,7 @@
+{
+  "entry": "*" // __main__
+  "interpreterPath": "*",
+  "dependencies": {
+
+  }
+}

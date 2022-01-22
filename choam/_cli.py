@@ -1,0 +1,43 @@
+# class Application(cli("<cli_name>")):
+#   def create(self):
+#     #  do something
+
+import sys
+
+class CommandLineInterface:
+  '''
+  Command line interface class for managing 
+  methods to commands
+  '''
+  
+  @staticmethod
+  def _check_arguments():
+    return len(sys.argv) > 1
+  
+  @staticmethod
+  def _get_methods(_object):
+    return [
+      method for method in dir(_object) if method.startswith('_') is False
+    ]
+  
+  def __init__(self, _object) -> None:
+    self.__object = _object
+    self.__arguments = sys.argv
+    
+    if not self._check_arguments():
+      return
+    
+    self.command(self.__arguments[1])
+    
+  def command(self, command: str):
+    methods = self._get_methods(self.__object)
+    
+    if command.lower() not in methods:
+      return
+    
+    method = getattr(
+      self.__object,
+      command
+    )
+    
+    method(self.__arguments[2:])
