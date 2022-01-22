@@ -33,7 +33,8 @@ class CommandLineInterface:
   def command(self, command: str):
     methods = self._get_methods(self.__object)
     
-    if command.lower() not in methods:
+    if command not in methods:
+      print(f"'{command}' is not assosciated with '{self.__object.__name__}'")
       return
     
     method = getattr(

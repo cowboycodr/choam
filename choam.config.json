@@ -1,5 +1,5 @@
 {
-  "entry": "*" // __main__
+  "entry": "*",
   "interpreterPath": "*",
   "dependencies": {
 

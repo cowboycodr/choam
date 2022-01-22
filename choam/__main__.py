@@ -4,7 +4,8 @@ class Choam:
   def __init__(self) -> None:
     pass
   
-  def new(name: str, additional: str, options: list):
+  def new(name: str):
+    # TODO: Programmatically create folder structure
     pass
     
 if __name__ == '__main__':
