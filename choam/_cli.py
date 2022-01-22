@@ -29,8 +29,29 @@ class CommandLineInterface:
       return
     
     self.command(self.__arguments[1])
-    
+  
   def command(self, command: str):
+    '''
+    Deliver named arguments to CLI object methods
+    
+    Specifying a cli-command method (example):
+    ```
+    class SomeObject():
+      def __init__(self, ...arguments):
+        pass
+        
+      # non-command method definitions start with an underscore
+      def _command(arguments: list):
+        # do something
+        
+      # cli-command method defintion example
+      def command(name: str, age: int, extras: list):
+        # MAKE SURE to specify a type after the colon 
+      
+        # do something
+    ```
+    '''
+    
     methods = self._get_methods(self.__object)
     
     if command not in methods:
