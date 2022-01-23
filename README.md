@@ -17,6 +17,10 @@ ___
 To initialize a pre-existing project with Choam
 
 ```$ choam init <project_name>```
+___
+To run a Choam project from default entry point in a pre-existing choam project
+
+```$ choam run```
 
 ## Goals
 Easily scaffold/structure projects
