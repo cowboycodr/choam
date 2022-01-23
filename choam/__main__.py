@@ -78,13 +78,32 @@ class Choam:
     
     name = package_config['name']
     version = package_config['version']
-    description = package_config['description']
+    
+    try:
+      description = package_config['description']
+    except:
+      description = ""
+    
+    try:
+      repo_url = package_config['repo']
+    except:
+      repo_url = ''
+    
+    try:
+      keywords = package_config['keywords']
+    except:
+      keywords = []
+      
+    modules = ConfigManager().configurations['modules']
     
     template = {
       f"setup.py": create_setup_file(
         name,
         version,
-        description
+        description,
+        keywords,
+        modules,
+        repo_url
       )
     }
     
@@ -93,7 +112,7 @@ class Choam:
     Choam._log_multiple(
       [
         f"Successfully setup '{name}' for PyPi publication",
-        f"Use '$ choam publish' when configurations have been set"
+        f"Use '$ choam publish' (not impl'd yet) when configurations have been set"
       ]
     )
     
