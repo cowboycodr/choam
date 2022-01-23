@@ -7,11 +7,14 @@ class FolderStructure:
   '''
   
   @staticmethod
-  def is_choam_project(_dir: str) -> bool:
+  def is_choam_project(_dir: "str | None" = None) -> bool:
     '''
     Returns true if the directory passed in 
     is a Choam project
     '''
+    
+    if not _dir:
+      _dir = os.getcwd()
     
     if not os.path.exists(_dir):
       return
