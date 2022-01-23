@@ -1,8 +1,8 @@
 from .folder_structure import FolderStructure as FS
 from ._cli import CommandLineInterface as CLI
+from .config_manager import ConfigManager
 
 import os
-
 class Choam:
   def __init__(self) -> None:
     pass
