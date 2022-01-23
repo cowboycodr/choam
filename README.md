@@ -8,6 +8,11 @@ Etymology of ```choam```: The 'Combine Honnette Ober Advancer Mercantiles' or C.
 is the main source of control of all economic affairs in the book of Dune. The reasoning
 behind this word is the smoothness of the word. 
 
+I started Chaom when I was tired of two things. The first being project setup. I hate 
+having to download Python projects and manually configure the whole project to be accurate
+for my system. Secondly, publishing packages to PyPi is overally complicated and can 
+be durastically simplified with the help of Python. 
+
 ## Snippets
 
 To create a new Choam structured project
