@@ -1,0 +1,6 @@
+[package]
+name = "Choam"
+version = "0.0.1"
+description = "A Python project scaffolder and manager"
+
+[modules]

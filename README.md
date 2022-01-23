@@ -11,4 +11,4 @@ Easily scaffold/structure projects
 - Install all project dependencies ```$ choam install```
 - Adapt a pre-existing project to Choam with as little as ```$ choam init --adapt```
 
-#### This project is structured with Choam
+#### This project is structured with [Choam](https://github.com/cowboycodr/choam)
