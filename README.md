@@ -27,8 +27,8 @@ Easily scaffold/structure projects
 
 - Manage ```choam``` configurations from a ```Choam.toml``` file
 - Add dependencies to project ```$ choam add <dependency_name>```
-- Install all project dependencies ```$ choam setup```
-- Install Choam projects from GitHub ```$ choam install cowboycodr/choam```
+- Install all project dependencies ```$ choam install```
+- Install Choam projects from GitHub ```$ choam download cowboycodr/choam```
 - Use ```choam``` as global exe
 - Package projects to exe ```$ choam build```
 - And more...

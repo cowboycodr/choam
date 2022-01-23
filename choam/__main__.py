@@ -1,14 +1,21 @@
-from .folder_structure import FolderStructure as FS
-from ._cli import CommandLineInterface as CLI
-from .config_manager import ConfigManager
-
 import os
+
+from choam._cli import CommandLineInterface as CLI
+from choam.config_manager import ConfigManager
+from choam.create_setup_file import create_setup_file
+from choam.folder_structure import FolderStructure as FS
+
 class Choam:
   def __init__(self) -> None:
     pass
   
   def _log(message: str):
     print(f"\n\t{message}")
+    
+  def _log_multiple(messages: list[str]):
+    print()
+    for message in messages:
+      print(f'\t{message}')
   
   def init(name: str):
     directory = os.getcwd()
@@ -62,6 +69,32 @@ class Choam:
     
     os.system(
       f"python -m {folder_name}"
+    )
+    
+  def setup():
+    directory = os.getcwd()
+    
+    package_config = ConfigManager().configurations['package']
+    
+    name = package_config['name']
+    version = package_config['version']
+    description = package_config['description']
+    
+    template = {
+      f"setup.py": create_setup_file(
+        name,
+        version,
+        description
+      )
+    }
+    
+    FS.construct_from_dict(template, f"{directory}\\")
+    
+    Choam._log_multiple(
+      [
+        f"Successfully setup '{name}' for PyPi publication",
+        f"Use '$ choam publish' when configurations have been set"
+      ]
     )
     
 if __name__ == '__main__':

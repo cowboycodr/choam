@@ -2,5 +2,3 @@
 name = "Choam"
 version = "0.0.1"
 description = "Python project scaffolder/manager"
-
-[modules]

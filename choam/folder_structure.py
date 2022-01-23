@@ -43,4 +43,4 @@ class FolderStructure:
     output_dir = os.path.abspath(output_dir)
     
     for file_name in _dict.keys():
-      FolderStructure._create_file(output_dir + file_name, _dict[file_name])
+      FolderStructure._create_file(f"{output_dir}\\{file_name}", _dict[file_name])
