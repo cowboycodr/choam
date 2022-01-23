@@ -21,6 +21,10 @@ ___
 To run a Choam project from default entry point in a pre-existing choam project
 
 ```$ choam run```
+___
+To setup Choam for publication
+
+```$ choam setup```
 
 ## Goals
 Easily scaffold/structure projects
