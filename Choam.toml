@@ -1,0 +1,8 @@
+[package]
+name = "Choam"
+version = "0.0.1"
+description = "A project scaffolder and manager"
+
+[dependencies]
+# EXAMPLE
+# json = "*"
