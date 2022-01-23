@@ -7,6 +7,18 @@ class FolderStructure:
   '''
   
   @staticmethod
+  def is_choam_project(_dir: str) -> bool:
+    '''
+    Returns true if the directory passed in 
+    is a Choam project
+    '''
+    
+    if not os.path.exists(_dir):
+      return
+    
+    return ("Choam.toml" in os.listdir(os.path.abspath(_dir)))
+  
+  @staticmethod
   def _create_file(filepath: str, content: "str | None") -> str:
     file_name = filepath.split("\\")[-1]
     folder_path = filepath.replace(file_name, '')

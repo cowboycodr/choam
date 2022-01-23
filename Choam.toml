@@ -1,8 +1,6 @@
 [package]
 name = "Choam"
 version = "0.0.1"
-description = "A project scaffolder and manager"
+description = "Python project scaffolder/manager"
 
-[dependencies]
-# EXAMPLE
-# json = "*"
+[modules]
