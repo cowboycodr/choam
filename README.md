@@ -29,7 +29,8 @@ Easily scaffold/structure projects
 - Add dependencies to project ```$ choam add <dependency_name>```
 - Install all project dependencies ```$ choam setup```
 - Install Choam projects from GitHub ```$ choam install cowboycodr/choam```
-- Convert to exe
+- Use ```choam``` as global exe
+- Package projects to exe ```$ choam build```
 - And more...
 
 #### This project is structured with [Choam](https://github.com/cowboycodr/choam)
