@@ -37,8 +37,6 @@ class FolderStructure:
   
   @staticmethod
   def _create_file(filepath: str, content: "str | None") -> str:
-    print("FILEPATH:", filepath)
-
     filepath = os.path.abspath(filepath)
     filepath = filepath.replace('\\', '/')
 
