@@ -1,13 +1,16 @@
 import os
 import sys
 import toml
+import fire
 import subprocess
 
-from choam._cli import CommandLineInterface as CLI
 from choam.create_setup_file import create_setup_file
 from choam.folder_structure import FolderStructure as FS
 
 class Choam:
+  def __init__(self):
+    pass
+
   def _get_config():
     with open(f"{os.getcwd()}/Choam.toml", "r") as f:
       return toml.loads(
@@ -26,7 +29,12 @@ class Choam:
     for message in messages:
       print(f'\t{message}')
   
-  def init(name: str):
+  def init(self, name: str):
+    '''
+    Initalize a new Choam project in the working 
+    directory
+    '''
+
     directory = os.getcwd()
     
     if FS.is_choam_project(directory):
@@ -46,7 +54,12 @@ class Choam:
     
     FS.construct_from_dict(template, directory)
   
-  def new(name: str):
+  def new(self, name: str):
+    '''
+    Create a new directory and initalize a Choam project
+    inside of it
+    '''
+
     directory = os.getcwd()
     
     with open(os.path.abspath("choam\\assets\.gitignore.txt"), "r") as f:
@@ -65,7 +78,7 @@ class Choam:
     
     FS.construct_from_dict(template, directory)
     
-  def run():
+  def run(self):
     '''
     Run choam project main file
     '''
@@ -80,7 +93,7 @@ class Choam:
       f"python -m {folder_name}"
     )
     
-  def setup():
+  def setup(self):
     directory = os.getcwd()
     
     configs = Choam._get_config()
@@ -127,14 +140,14 @@ class Choam:
       ]
     )
     
-  def add(dependency_name: str):
+  def add(self, dependency_name: str):
     config = Choam._get_config()
 
     config['modules'][dependency_name] = "*"
     
     Choam._set_config(toml.dumps(config))
 
-  def install():
+  def install(self):
     config = Choam._get_config()
     modules = config['modules']
 
@@ -146,7 +159,7 @@ class Choam:
 
       subprocess.call([sys.executable, "-m", "pip", "install", module_string.replace("--upgrade", ""), "--upgrade" if upgrade_module else ""])
     
-  def publish():
+  def publish(self):
     Choam.add("twine")
     Choam.install()
 
@@ -164,4 +177,4 @@ class Choam:
     Choam._log("Real publication successful")
   
 if __name__ == '__main__':
-  CLI(Choam)
+  fire.Fire(Choam())
