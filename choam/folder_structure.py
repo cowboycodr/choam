@@ -37,9 +37,14 @@ class FolderStructure:
   
   @staticmethod
   def _create_file(filepath: str, content: "str | None") -> str:
-    file_name = filepath.split("\\")[-1]
+    filepath = os.path.abspath(filepath)
+    filepath = filepath.replace("\\\\", '').replace('\\', '/')
+
+    file_name = filepath.split("/")[-1]
     folder_path = filepath.replace(file_name, '')
     
+    print(file_name, folder_path)
+
     if not os.path.exists(folder_path):
       os.makedirs(folder_path)
       

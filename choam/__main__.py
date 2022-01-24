@@ -116,7 +116,7 @@ class Choam:
     modules = configs['modules']
     
     template = {
-      f"setup.py": create_setup_file(
+      f"\\setup.py": create_setup_file(
         name,
         version,
         description,
