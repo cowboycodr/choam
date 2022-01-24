@@ -54,7 +54,7 @@ class Choam:
     template = {
       f"\\{folder_name}\\{folder_name}\\__main__.py": "",
       f"\\{folder_name}\\{folder_name}\\__init__.py": "__version__ == '0.1'",
-      f"\\{folder_name}\\Choam.toml": f'[package]\nname = "{name}\nversion = "0.0.1"\ndescription = ""',
+      f"\\{folder_name}\\Choam.toml": f'[package]\nname = "{name}"\nversion = "0.0.1"\ndescription = ""',
       f"\\{folder_name}\\README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
       f"\\{folder_name}\\.gitignore": gitignore
     }
