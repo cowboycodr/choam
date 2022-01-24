@@ -1,23 +1,7 @@
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-from .folder_structure import FolderStructure as FS
-from ._cli import CommandLineInterface as CLI
-from .config_manager import ConfigManager
-=======
 import os
 import toml
 
 from choam._cli import CommandLineInterface as CLI
-from choam.create_setup_file import create_setup_file
-from choam.folder_structure import FolderStructure as FS
->>>>>>> Stashed changes
-
->>>>>>> config-manager
-import os
-
-from choam._cli import CommandLineInterface as CLI
-from choam.config_manager import ConfigManager
 from choam.create_setup_file import create_setup_file
 from choam.folder_structure import FolderStructure as FS
 
