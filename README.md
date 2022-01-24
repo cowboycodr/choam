@@ -40,6 +40,7 @@ Easily scaffold/structure projects
 - Install Choam projects from GitHub ```$ choam download cowboycodr/choam```
 - Use ```choam``` as global exe
 - Package projects to exe ```$ choam build```
+- Integrate ```fire``` cli manager
 - And more...
 
 #### This project is structured with [Choam](https://github.com/cowboycodr/choam)
