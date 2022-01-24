@@ -20,6 +20,20 @@ class FolderStructure:
       return
     
     return ("Choam.toml" in os.listdir(os.path.abspath(_dir)))
+
+  def is_publishable(_dir: "str | None" = None):
+    ''''
+    Returns True if the directory fits 
+    Choam's publication requirements
+    '''
+
+    if not _dir:
+      _dir = os.getcwd()
+
+    if not os.path.exists(_dir):
+      return
+
+    return ("setup.py" in os.listdir(os.path.abspath(_dir)))
   
   @staticmethod
   def _create_file(filepath: str, content: "str | None") -> str:

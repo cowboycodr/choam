@@ -1,5 +1,7 @@
 import os
+import sys
 import toml
+import subprocess
 
 from choam._cli import CommandLineInterface as CLI
 from choam.create_setup_file import create_setup_file
@@ -7,17 +9,19 @@ from choam.folder_structure import FolderStructure as FS
 
 class Choam:
   def _get_config():
-    with open(f"{os.getcwd()}\\Choam.toml", "r") as f:
-      return toml.loads(f.read())
+    with open(f"{os.getcwd()}/Choam.toml", "r") as f:
+      return toml.loads(
+        f.read()
+      )
     
   def _set_config(content: str):
-    with open(f"{os.getcwd()}\\Choam.toml", "w") as f:
+    with open(f"{os.getcwd()}/Choam.toml", "w") as f:
       f.write(content)
   
   def _log(message: str):
     print(f"\n\t{message}")
     
-  def _log_multiple(messages: list[str]):
+  def _log_multiple(messages: "list[str]"):
     print()
     for message in messages:
       print(f'\t{message}')
@@ -129,6 +133,18 @@ class Choam:
     config['modules'][dependency_name] = "*"
     
     Choam._set_config(toml.dumps(config))
+
+  def install():
+    config = Choam._get_config()
+    modules = config['modules']
+
+    for mod in modules:
+      Choam._log(f"Installing {mod}")
+
+      module_string = f"{mod}=={modules[mod]}" if modules[mod] != "*" else f"{mod}--upgrade"
+      upgrade_module = module_string.endswith('--upgrade')
+
+      subprocess.call([sys.executable, "-m", "pip", "install", module_string.replace("--upgrade", ""), "--upgrade" if upgrade_module else ""])
     
 if __name__ == '__main__':
   CLI(Choam)

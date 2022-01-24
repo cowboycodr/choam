@@ -2,8 +2,8 @@ def create_setup_file(
   name: str, 
   version: str, 
   description: str, 
-  keywords: list[str], 
-  modules: list[str],
+  keywords: "list[str]", 
+  modules: "dict[str]",
   repo_url: str
   ):
   '''
