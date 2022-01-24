@@ -63,30 +63,33 @@ class CommandLineInterface:
       command
     )
     
-    arg_signature = str(signature(method)).replace('(', '').replace(')', '')
-    
-    args_list = []
-    
-    for arg in arg_signature.split(","):
-      arg = arg.split(":")[0].strip()
+    if len(sys.argv) > 2:
+      arg_signature = str(signature(method)).replace('(', '').replace(')', '')
       
-      args_list.append(arg)
-    
-    args_dict = {}
-    for arg_index, arg in enumerate(args_list):
+      args_list = []
       
-      if arg_index < len(args_list) - 1:
-        arg_value = sys.argv[arg_index + 2]
+      for arg in arg_signature.split(","):
+        arg = arg.split(":")[0].strip()
         
-      elif len(sys.argv) - 1 > arg_index + 1:
-        arg_value = sys.argv[arg_index + 2:]
-        
-        if len(arg_value) == 1: 
-          arg_value = arg_value[0]
-        
-      else:
-        raise IndexError(f"Failed to run command: '{command}': was not supplied enough arguments")
+        args_list.append(arg)
       
-      args_dict[arg] = arg_value
-    
-    method(**args_dict)
+      args_dict = {}
+      for arg_index, arg in enumerate(args_list):
+        
+        if arg_index < len(args_list) - 1:
+          arg_value = sys.argv[arg_index + 2]
+          
+        elif len(sys.argv) - 1 > arg_index + 1:
+          arg_value = sys.argv[arg_index + 2:]
+          
+          if len(arg_value) == 1: 
+            arg_value = arg_value[0]
+          
+        else:
+          raise IndexError(f"Failed to run command: '{command}': was not supplied enough arguments")
+        
+        args_dict[arg] = arg_value
+      
+      method(**args_dict)
+    else:
+      method()
