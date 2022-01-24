@@ -6,6 +6,14 @@ from choam.create_setup_file import create_setup_file
 from choam.folder_structure import FolderStructure as FS
 
 class Choam:
+  def _log(message: str):
+    print(f'\n\t{message}')
+    
+  def _log_multiple(messages: list[str]):
+    print()
+    for message in messages:
+      print(f'\t{message}')
+  
   def _get_config():
     with open(f"{os.getcwd()}\\Choam.toml", "r") as f:
       return toml.loads(f.read())

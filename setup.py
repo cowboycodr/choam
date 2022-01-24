@@ -6,9 +6,9 @@ setup(
     version="0.0.1",
     description="Python project scaffolder/manager",
     packages=find_packages(),
-    keywords=['package', 'manager'],
+    keywords=[],
     install_requires=['flask'],
     project_urls={
-        'Source': 'https://github.com/cowboycodr/choam'
+        'Source': ''
     },
 )
