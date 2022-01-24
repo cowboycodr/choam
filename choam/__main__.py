@@ -6,6 +6,7 @@ import subprocess
 
 from choam.create_setup_file import create_setup_file
 from choam.folder_structure import FolderStructure as FS
+from choam.gitignore import gitignore
 
 class Choam:
   def __init__(self):
@@ -41,9 +42,6 @@ class Choam:
       Choam._log("Already a Choam project.")
       return
     
-    with open("assets/.gitignore.txt") as f:
-      gitignore = f.read()
-    
     template = {
       f"\\{name}\\__main__.py": "",
       f"\\{name}\\__init__.py": "__version__ == '0.1'",
@@ -61,9 +59,6 @@ class Choam:
     '''
 
     directory = os.getcwd()
-    
-    with open(os.path.abspath("choam\\assets\.gitignore.txt"), "r") as f:
-      gitignore = f.read()
       
     folder_name = name.lower()
     
