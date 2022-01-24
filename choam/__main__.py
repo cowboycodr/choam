@@ -160,8 +160,8 @@ class Choam:
       subprocess.call([sys.executable, "-m", "pip", "install", module_string.replace("--upgrade", ""), "--upgrade" if upgrade_module else ""])
     
   def publish(self):
-    Choam.add("twine")
-    Choam.install()
+    self.add("twine")
+    self.install()
 
     Choam._log("Attempting real publication to https://test.pypi.org/legacy")
     subprocess.call([sys.executable, "-m", "setup.py", "sdist", "bdist_wheel"])
