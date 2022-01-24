@@ -1,3 +1,19 @@
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+from .folder_structure import FolderStructure as FS
+from ._cli import CommandLineInterface as CLI
+from .config_manager import ConfigManager
+=======
+import os
+import toml
+
+from choam._cli import CommandLineInterface as CLI
+from choam.create_setup_file import create_setup_file
+from choam.folder_structure import FolderStructure as FS
+>>>>>>> Stashed changes
+
+>>>>>>> config-manager
 import os
 
 from choam._cli import CommandLineInterface as CLI
@@ -6,8 +22,13 @@ from choam.create_setup_file import create_setup_file
 from choam.folder_structure import FolderStructure as FS
 
 class Choam:
-  def __init__(self) -> None:
-    pass
+  def _get_config():
+    with open(f"{os.getcwd()}\\Choam.toml", "r") as f:
+      return toml.loads(f.read())
+    
+  def _set_config(content: str):
+    with open(f"{os.getcwd()}\\Choam.toml", "w") as f:
+      f.write(content)
   
   def _log(message: str):
     print(f"\n\t{message}")
@@ -65,16 +86,35 @@ class Choam:
       Choam._log("Not a Choam project.")
       return
     
+
     folder_name = ConfigManager().configurations['package']['name'].lower()
+
+    folder_name = Choam._get_config['package']['name'].lower()
+
     
     os.system(
       f"python -m {folder_name}"
     )
+
     
   def setup():
     directory = os.getcwd()
     
     package_config = ConfigManager().configurations['package']
+  
+  def add(dependency_name: str):
+    config = Choam._get_config()
+    
+    config['modules'][dependency_name] = "*"
+    
+    Choam._set_config(toml.dumps(config))
+  
+  def setup():
+    directory = os.getcwd()
+    
+    configs = Choam._get_config()
+    
+    package_config = configs['package']
     
     name = package_config['name']
     version = package_config['version']
@@ -94,7 +134,8 @@ class Choam:
     except:
       keywords = []
       
-    modules = ConfigManager().configurations['modules']
+    modules = ['modules']
+    modules = configs['modules']
     
     template = {
       f"setup.py": create_setup_file(
