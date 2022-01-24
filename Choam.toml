@@ -7,3 +7,4 @@ keywords = [ "package", "manager",]
 
 [modules]
 toml = "*"
+twine = "*"

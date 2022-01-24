@@ -21,7 +21,6 @@ def create_setup_file(
     '',
     'setup(',
     f'    name="{name}",',
-    f'    packages=["{name.lower()}"],',
     f'    version="{version}",',
     f'    description="{description}",',
     f'    packages=find_packages(),',

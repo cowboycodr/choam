@@ -146,5 +146,22 @@ class Choam:
 
       subprocess.call([sys.executable, "-m", "pip", "install", module_string.replace("--upgrade", ""), "--upgrade" if upgrade_module else ""])
     
+  def publish():
+    Choam.add("twine")
+    Choam.install()
+
+    Choam._log("Attempting real publication to https://test.pypi.org/legacy")
+    subprocess.call([sys.executable, "-m", "setup.py", "sdist", "bdist_wheel"])
+    subprocess.call([sys.executable, "-m", "twine", "upload", f"--repository-url", "https://test.pypi.org/legacy/", "dist/*"])
+
+    Choam._log_multiple([
+      "Test publication successful",
+      "Attempting real publication..."
+    ])
+
+    subprocess.call([sys.executable, "-m", "twine", "upload", "dist/*"])
+
+    Choam._log("Real publication successful")
+  
 if __name__ == '__main__':
   CLI(Choam)
