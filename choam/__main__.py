@@ -6,14 +6,6 @@ from choam.create_setup_file import create_setup_file
 from choam.folder_structure import FolderStructure as FS
 
 class Choam:
-  def _log(message: str):
-    print(f'\n\t{message}')
-    
-  def _log_multiple(messages: list[str]):
-    print()
-    for message in messages:
-      print(f'\t{message}')
-  
   def _get_config():
     with open(f"{os.getcwd()}\\Choam.toml", "r") as f:
       return toml.loads(f.read())
@@ -78,29 +70,12 @@ class Choam:
       Choam._log("Not a Choam project.")
       return
     
-
-    folder_name = ConfigManager().configurations['package']['name'].lower()
-
-    folder_name = Choam._get_config['package']['name'].lower()
-
+    folder_name = Choam._get_config()['package']['name'].lower()
     
     os.system(
       f"python -m {folder_name}"
     )
-
     
-  def setup():
-    directory = os.getcwd()
-    
-    package_config = ConfigManager().configurations['package']
-  
-  def add(dependency_name: str):
-    config = Choam._get_config()
-    
-    config['modules'][dependency_name] = "*"
-    
-    Choam._set_config(toml.dumps(config))
-  
   def setup():
     directory = os.getcwd()
     
@@ -126,7 +101,6 @@ class Choam:
     except:
       keywords = []
       
-    modules = ['modules']
     modules = configs['modules']
     
     template = {
@@ -145,9 +119,16 @@ class Choam:
     Choam._log_multiple(
       [
         f"Successfully setup '{name}' for PyPi publication",
-        f"Use '$ choam publish' (not impl'd yet) when configurations have been set"
+        f"Use '$ choam publish' when configurations have been set"
       ]
     )
+    
+  def add(dependency_name: str):
+    config = Choam._get_config()
+
+    config['modules'][dependency_name] = "*"
+    
+    Choam._set_config(toml.dumps(config))
     
 if __name__ == '__main__':
   CLI(Choam)
