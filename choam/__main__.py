@@ -58,8 +58,6 @@ class Choam:
     
     FS.construct_from_dict(template, directory)
     
-<<<<<<< Updated upstream
-=======
   def run():
     '''
     Run choam project main file
@@ -129,6 +127,5 @@ class Choam:
       ]
     )
     
->>>>>>> Stashed changes
 if __name__ == '__main__':
   CLI(Choam)
