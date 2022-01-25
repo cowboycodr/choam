@@ -3,6 +3,10 @@ Choam is a project scaffolder and manager. Aiming to be like the NPM of Python. 
 package managing, enviroment scaffolder, and especially an easier and more dynamic way of 
 publishing to PyPi.
 
+Install Choam via pi
+
+```$ python3 -m pip install choam```
+
 ## Backstory
 Etymology of ```choam```: The 'Combine Honnette Ober Advancer Mercantiles' or C.H.O.A.M. 
 is the main source of control of all economic affairs in the book of Dune. The reasoning
@@ -17,30 +21,30 @@ be durastically simplified with the help of Python.
 
 To create a new Choam structured project
 
-```$ choam new <project_name>```
-___
+```$ python3 -m choam new <project_name>```
+
 To initialize a pre-existing project with Choam
 
 ```$ choam init <project_name>```
-___
+
 To run a Choam project from default entry point in a pre-existing choam project
 
-```$ choam run```
-___
+```$ python3 -m choam run```
+
 To setup Choam for publication
 
-```$ choam setup```
+```$ python3 -m choam setup```
+
+To install Choam project dependencies
+
+```$ python3 -m choam install```
 
 ## Goals
 Easily scaffold/structure projects
 
-- Manage ```choam``` configurations from a ```Choam.toml``` file
-- Add dependencies to project ```$ choam add <dependency_name>```
-- Install all project dependencies ```$ choam install```
 - Install Choam projects from GitHub ```$ choam download cowboycodr/choam```
-- Use ```choam``` as global exe
+- Use ```choam``` as global executable
 - Package projects to exe ```$ choam build```
-- Integrate ```fire``` cli manager
-- And more...
+- And more in the future...
 
 #### This project is structured with [Choam](https://github.com/cowboycodr/choam)
