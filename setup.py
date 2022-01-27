@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="Choam",
-    version="0.0.3",
+    version="0.0.6",
     description="Python project scaffolder/manager",
     packages=find_packages(),
     keywords=['package', 'manager'],
