@@ -40,12 +40,8 @@ class FolderStructure:
     filepath = os.path.abspath(filepath)
     filepath = filepath.replace('\\', '/')
 
-    print(filepath)
-
     file_name = filepath.split("/")[-1]
     folder_path = filepath.replace(file_name, '')
-    
-    print(file_name, folder_path)
 
     if not os.path.exists(folder_path):
       os.makedirs(folder_path)

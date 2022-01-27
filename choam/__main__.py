@@ -49,8 +49,6 @@ class Choam:
       f"{directory}\\README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
       f"{directory}\\.gitignore": gitignore
     }
-
-    print(template)
     
     FS.construct_from_dict(template, directory)
   
