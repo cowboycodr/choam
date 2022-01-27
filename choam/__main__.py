@@ -158,6 +158,7 @@ class Choam:
     
   def publish(self):
     self.add("twine")
+    self.add("wheel")
     self.install()
 
     Choam._log("Attempting real publication to https://test.pypi.org/legacy")
