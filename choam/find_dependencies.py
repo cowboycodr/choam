@@ -27,7 +27,7 @@ def _find_dependencies(project_path: Path, project_name):
 
     files = Path(
         Path(project_path / project_name).absolute()
-    ).glob("*.py")
+    ).rglob("*.py")
 
     for f in files:
         import_info.update(
