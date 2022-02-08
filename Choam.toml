@@ -6,12 +6,9 @@ repo = "https://github.com/cowboycodr/choam"
 keywords = [ "package", "manager",]
 
 [modules]
-findimports = "*"
-toml = "*"
 fire = "*"
-pathlib = "*"
+findimports = "*"
 choam = "*"
+pathlib = "*"
+toml = "*"
 typing = "*"
-twine = "*"
-wheel = "*"
-flask = "*"
