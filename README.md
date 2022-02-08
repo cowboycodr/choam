@@ -26,6 +26,9 @@ The most useful snippets of `Choam`
 
 #### Start publication to PyPi
 `$ choam publish`
+
+#### Run project entrypoint
+`$ choam run <optional:relative_path>`
 ___
 
 ### This project is structured with [Choam](https://github.com/cowboycodr/choam)
