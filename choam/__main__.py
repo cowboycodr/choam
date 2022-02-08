@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 import pkg_resources
 from typing import Optional
 
@@ -58,6 +59,32 @@ class Choam:
     
     FS.construct_from_dict(template, directory)
   
+  def cleanup(self):
+    '''
+    Remove build directories discharged from `$ choam publish` 
+    '''
+
+    project_name = Choam._get_config()['package']['name']
+
+    build_directories = [
+      "build",
+      f"{project_name}.egg-info",
+      "dist"
+    ]
+
+    if project_name in build_directories:
+      Choam._log_multiple(
+        [
+          "Cannot cleanup project that matches names with build directories list",
+        f"{project_name} is a reserved directory name."
+        ]
+      )
+      return
+
+    for dirname in build_directories:
+      shutil.rmtree(f"{os.getcwd()}/{dirname}")
+
+
   def new(self, name: str):
     '''
     Create a new directory and initalize a Choam project
