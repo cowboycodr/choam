@@ -7,10 +7,9 @@ keywords = [ "package", "manager",]
 
 [modules]
 toml = "*"
-subprocess = "*"
-pathlib = "*"
 choam = "*"
+pathlib = "*"
 findimports = "*"
-sys = "*"
-os = "*"
+pkg_resources = "*"
 fire = "*"
+typing = "*"

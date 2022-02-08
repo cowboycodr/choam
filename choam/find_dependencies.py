@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 import toml
@@ -14,6 +15,12 @@ def _find_dependencies(project_path: Path, project_name):
     `Choam` to know the exact location of the project 
     all of the project files.
     '''
+
+    ignore_deps = [
+        'os',
+        'sys',
+        'subprocess', 
+    ]
 
     import_info = set()
 
@@ -33,6 +40,12 @@ def _find_dependencies(project_path: Path, project_name):
         depedency = repr(imp).split("'")[1]
 
         if depedency.startswith(project_name):
+            continue
+
+        if depedency in sys.builtin_module_names:
+            continue
+
+        if depedency in ignore_deps:
             continue
 
         dependencies.add(

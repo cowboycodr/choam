@@ -1,5 +1,6 @@
 import os
 import sys
+import pkg_resources
 from typing import Optional
 
 from choam.create_setup_file import create_setup_file
@@ -164,14 +165,26 @@ class Choam:
     
     Choam._set_config(toml.dumps(config))
 
-  def install(self):
+  def install(self, find_dependencies: Optional[bool] = None):
     config = Choam._get_config()
-    modules = config['modules']
 
-    for mod in modules:
+    if find_dependencies:
+      self.find_dependencies()
+
+    required_mods = {mod for mod in config['modules']}
+    installed_mods = {mod.key for mod in pkg_resources.working_set}
+    missing_mods = required_mods - installed_mods
+
+    print(missing_mods)
+    print(sys.builtin_module_names)
+
+    # Key: Module name, Value: Module version
+    mod_ver = config['modules']
+
+    for mod in missing_mods:
       Choam._log(f"Installing {mod}")
 
-      module_string = f"{mod}=={modules[mod]}" if modules[mod] != "*" else f"{mod}--upgrade"
+      module_string = f"{mod}=={mod_ver[mod]}" if mod_ver[mod] != "*" else f"{mod}--upgrade"
       upgrade_module = module_string.endswith('--upgrade')
 
       subprocess.call([sys.executable, "-m", "pip", "install", module_string.replace("--upgrade", ""), "--upgrade" if upgrade_module else ""])
