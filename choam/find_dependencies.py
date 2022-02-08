@@ -1,5 +1,6 @@
 import os
 import sys
+import importlib
 from pathlib import Path
 
 import toml
@@ -69,7 +70,16 @@ def find_dependencies():
             f.read()
         )['package']['name']
 
-    return _find_dependencies(project_path, project_name)
+    found_depedencies = _find_dependencies(project_path, project_name)
+    dependencies = []
+
+    for dep in found_depedencies:
+        if not importlib.util.find_spec(dep):
+            break
+
+        dependencies.append(dep)
+
+    return dependencies
 
 if __name__ == '__main__':
     print(find_dependencies())
