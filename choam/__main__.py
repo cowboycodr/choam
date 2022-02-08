@@ -1,13 +1,15 @@
 import os
 import sys
-import toml
-import fire
-import subprocess
+from typing import Optional
 
 from choam.create_setup_file import create_setup_file
 from choam.find_dependencies import find_dependencies
 from choam.folder_structure import FolderStructure as FS
 from choam.gitignore import gitignore
+
+import toml
+import fire
+import subprocess
 
 class Choam:
   def __init__(self):
@@ -76,9 +78,12 @@ class Choam:
     
     FS.construct_from_dict(template, directory)
     
-  def run(self):
+  def run(self, file_name: Optional[str] = None):
     '''
-    Run choam project main file
+    Run `Choam`'s default entry point or specify
+    a filepath for Choam to run
+
+    :file_name: specific file for `Choam` to run
     '''
     
     if not FS.is_choam_project():
@@ -87,8 +92,14 @@ class Choam:
     
     folder_name = Choam._get_config()['package']['name'].lower()
     
-    os.system(
-      f"python -m {folder_name}"
+    if not file_name:
+      subprocess.call(
+        [sys.executable, "-m", folder_name]
+      )
+      return
+
+    subprocess.call(
+      [sys.executable, f"{os.path.abspath(folder_name)}/{file_name}"]
     )
     
   def setup(self):
