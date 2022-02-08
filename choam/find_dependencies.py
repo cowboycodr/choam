@@ -5,6 +5,16 @@ import toml
 import findimports
 
 def _find_dependencies(project_path: Path, project_name):
+    '''
+    Find all dependencies of a given project
+
+    :project_path: path to project
+
+    :project_name: name of the project // necesarry for
+    `Choam` to know the exact location of the project 
+    all of the project files.
+    '''
+
     import_info = set()
 
     files = Path(
@@ -32,6 +42,13 @@ def _find_dependencies(project_path: Path, project_name):
     return dependencies
 
 def find_dependencies():
+    '''
+    Syntactic sugar for `_find_dependencies()`
+
+    Automatically specifies the arguments 
+    `_find_dependencies()` for `Choam`'s needs.
+    '''
+
     project_path = Path(os.getcwd()).absolute()
     with open(f"{os.getcwd()}/Choam.toml", "r") as f:
         project_name = toml.loads(
