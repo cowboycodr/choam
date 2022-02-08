@@ -158,12 +158,18 @@ class Choam:
       ]
     )
     
-  def add(self, dependency_name: str):
+  def add(self, dependency_name: str, install: Optional[bool] = None):
+    '''
+    Add a required depedency to the depdency list
+    '''
+
     config = Choam._get_config()
 
     config['modules'][dependency_name] = "*"
-    
+
     Choam._set_config(toml.dumps(config))
+    
+    if install: self.install(find_dependencies=False)
 
   def install(self, find_dependencies: Optional[bool] = None):
     config = Choam._get_config()
