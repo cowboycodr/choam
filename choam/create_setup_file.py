@@ -1,9 +1,14 @@
+import os
+from pathlib import Path
+
+from choam.find_dependencies import find_dependencies
+
 def create_setup_file(
   name: str, 
   version: str, 
   description: str, 
   keywords: "list[str]", 
-  modules: "dict[str]",
+  dependencies: "list",
   repo_url: str
   ):
   '''
@@ -16,6 +21,12 @@ def create_setup_file(
     @version - current version
   '''
   
+  new_dependencies = set(find_dependencies())
+  for dep in dependencies:
+    new_dependencies.add(dep)
+
+  dependencies = new_dependencies
+
   return '\n'.join([
     'from setuptools import setup, find_packages',
     '',
@@ -25,7 +36,7 @@ def create_setup_file(
     f'    description="{description}",',
     f'    packages=find_packages(),',
     f'    keywords={keywords},',
-    f'    install_requires={[key for key in modules.keys()]},',
+    f'    install_requires={[dep for dep in dependencies]},',
     '    project_urls={',
     f"        'Source': '{repo_url}'",
     "    },",

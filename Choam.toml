@@ -7,6 +7,10 @@ keywords = [ "package", "manager",]
 
 [modules]
 toml = "*"
-twine = "*"
+subprocess = "*"
+pathlib = "*"
+choam = "*"
+findimports = "*"
+sys = "*"
+os = "*"
 fire = "*"
-wheel = "*"

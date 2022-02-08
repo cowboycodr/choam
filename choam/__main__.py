@@ -5,6 +5,7 @@ import fire
 import subprocess
 
 from choam.create_setup_file import create_setup_file
+from choam.find_dependencies import find_dependencies
 from choam.folder_structure import FolderStructure as FS
 from choam.gitignore import gitignore
 
@@ -20,15 +21,17 @@ class Choam:
     
   def _set_config(content: str):
     with open(f"{os.getcwd()}/Choam.toml", "w") as f:
-      f.write(content)
+      f.write(str(content))
   
   def _log(message: str):
     print(f"\n\t{message}")
+    print()
     
   def _log_multiple(messages: "list[str]"):
     print()
     for message in messages:
       print(f'\t{message}')
+    print()
   
   def init(self, name: str):
     '''
@@ -89,12 +92,18 @@ class Choam:
     )
     
   def setup(self):
+    '''
+    Setup configurations for PyPi in `setup.py`.
+
+    Additional configurations may be done to `setup.py`
+    after this command has been run.
+    '''
+
     directory = os.getcwd()
     
-    configs = Choam._get_config()
-    
-    package_config = configs['package']
-    
+    config = Choam._get_config()
+  
+    package_config = config['package']
     name = package_config['name']
     version = package_config['version']
     
@@ -113,7 +122,7 @@ class Choam:
     except:
       keywords = []
       
-    modules = configs['modules']
+    modules = config['modules']
     
     template = {
       f"\\setup.py": create_setup_file(
@@ -125,6 +134,8 @@ class Choam:
         repo_url
       )
     }
+
+    self.find_dependencies()
     
     FS.construct_from_dict(template, f"{directory}\\")
     
@@ -165,6 +176,19 @@ class Choam:
     subprocess.call([sys.executable, "-m", "twine", "upload", "dist/*"])
 
     Choam._log("Real publication successful")
+
+  def find_dependencies(self):
+    '''
+    Automatically search project files for imported
+    depedencies and add them to `Choam.toml` as well
+    as setup
+    '''
+
+    depedencies = find_dependencies()
+    new_config = Choam._get_config()
+    new_config['modules'] = {key: "*" for key in list(depedencies)}
+
+    Choam._set_config(toml.dumps(new_config))
   
 if __name__ == '__main__':
   fire.Fire(Choam())
