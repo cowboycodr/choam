@@ -20,6 +20,7 @@ def _find_dependencies(project_path: Path, project_name):
         'os',
         'sys',
         'subprocess', 
+        'pkg_resources'
     ]
 
     import_info = set()
