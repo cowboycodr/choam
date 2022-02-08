@@ -240,7 +240,7 @@ class Choam:
 
     depedencies = find_dependencies()
     new_config = Choam._get_config()
-    new_config['modules'] = {key: "*" for key in list(depedencies)}
+    new_config['modules'] = {dep: "*" for dep in sorted(list(depedencies), key=len)}
 
     Choam._set_config(toml.dumps(new_config))
   
