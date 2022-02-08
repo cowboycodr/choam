@@ -6,7 +6,7 @@ setup(
     description="Python project scaffolder/manager",
     packages=find_packages(),
     keywords=['package', 'manager'],
-    install_requires=['toml', 'findimports', 'fire', 'subprocess', 'os', 'pathlib', 'sys', 'typing', 'choam'],
+    install_requires=['pathlib', 'choam', 'findimports', 'fire', 'typing', 'pkg_resources', 'toml'],
     project_urls={
         'Source': 'https://github.com/cowboycodr/choam'
     },

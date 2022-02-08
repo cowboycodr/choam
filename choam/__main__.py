@@ -175,9 +175,6 @@ class Choam:
     installed_mods = {mod.key for mod in pkg_resources.working_set}
     missing_mods = required_mods - installed_mods
 
-    print(missing_mods)
-    print(sys.builtin_module_names)
-
     # Key: Module name, Value: Module version
     mod_ver = config['modules']
 
