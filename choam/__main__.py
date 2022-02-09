@@ -114,7 +114,12 @@ class Choam:
       return
 
     for dirname in build_directories:
-      shutil.rmtree(f"{os.getcwd()}/{dirname}")
+      path = f"{os.getcwd()}/{dirname}"
+
+      if not os.path.exists(path):
+        continue
+
+      shutil.rmtree(path)
 
 
   def new(self, name: str):
