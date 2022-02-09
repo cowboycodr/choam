@@ -9,8 +9,8 @@ keywords = [ "package", "manager",]
 shutil = "*"
 
 [modules]
-fire = "*"
 toml = "*"
+fire = "*"
 choam = "*"
 typing = "*"
 pathlib = "*"
