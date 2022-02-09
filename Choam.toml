@@ -5,11 +5,13 @@ description = "Python project scaffolder/manager"
 repo = "https://github.com/cowboycodr/choam"
 keywords = [ "package", "manager",]
 
-[modules]
-toml = "*"
-fire = "*"
-choam = "*"
+[modules-ignore]
 shutil = "*"
+
+[modules]
+fire = "*"
+toml = "*"
+choam = "*"
 typing = "*"
 pathlib = "*"
 importlib = "*"

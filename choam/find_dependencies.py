@@ -66,16 +66,22 @@ def find_dependencies():
 
     project_path = Path(os.getcwd()).absolute()
     with open(f"{os.getcwd()}/Choam.toml", "r") as f:
-        project_name = toml.loads(
+        config = toml.loads(
             f.read()
-        )['package']['name']
+        )
+
+        project_name = config['package']['name']
+        ignored_deps = config['modules-ignore']
 
     found_depedencies = _find_dependencies(project_path, project_name)
     dependencies = []
 
     for dep in found_depedencies:
         if not importlib.util.find_spec(dep):
-            break
+            continue
+
+        if dep in ignored_deps:
+            continue
 
         dependencies.append(dep)
 
