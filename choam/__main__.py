@@ -37,22 +37,54 @@ class Choam:
       print(f'\t{message}')
     print()
   
-  def init(self, name: str):
+  def _adapt(self, directory: str, name: str):
+    '''
+    Adapt an existing project directory to Choam's structure
+    '''
+
+    for f in os.listdir(directory):
+      dest = os.path.join(directory, name, f)
+
+      try:
+        os.makedirs('/'.join(dest.split("/")[:-1]))
+      except FileExistsError:
+        pass
+      
+      try:
+        shutil.move(f, dest)
+      except:
+        pass
+
+    template = {
+      f"\\Choam.toml": f'[package]\nname="{name}\nversion="0.0.0"\ndescription=""\nrepo="*required*"\nkeywords=[]\n\n[modules-ignore]\n\n[modules]',
+      f"\\README.md" : f"{name}\n###This project was structure with [Choam](https://github.com/cowboycodr/choam)",
+      f"\\.gitignore": gitignore
+    }
+
+    FS.construct_from_dict(template, directory)
+
+  def init(self, adapt: Optional[bool] = None):
     '''
     Initalize a new Choam project in the working 
     directory
     '''
 
     directory = os.getcwd()
+    name = directory.split("/")[-1]
     
     if FS.is_choam_project(directory):
       Choam._log("Already a Choam project.")
       return
     
+    if adapt:
+      self._adapt(directory, name)
+
+      return
+
     template = {
       f"{directory}\\{name}\\__main__.py": "",
       f"{directory}\\{name}\\__init__.py": "__version__ == '0.1'",
-      f"{directory}\\Choam.toml": f'[package]\nname = "{name}\nversion = "0.0.1"\ndescription = ""\n\n[modules]\nchoam = "*"',
+      f"{directory}\\Choam.toml": f'[package]\nname = "{name}\nversion = "0.0.1"\ndescription = ""\n\n[modules-ignore]\n\n[modules]',
       f"{directory}\\README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
       f"{directory}\\.gitignore": gitignore
     }
