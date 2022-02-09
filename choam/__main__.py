@@ -274,7 +274,7 @@ class Choam:
     subprocess.call([sys.executable, "-m", "setup.py", "sdist", "bdist_wheel"])
     subprocess.call([sys.executable, "-m", "twine", "upload", "dist/*"])
 
-    Choam._log("Real publication successful")
+    Choam._log("Real publication attempt completed")
 
   def find_dependencies(self):
     '''
