@@ -42,8 +42,21 @@ class Choam:
     Adapt an existing project directory to Choam's structure
     '''
 
+    PROJECT_FILES = [
+      "requirements.txt",
+      ".gitignore",
+      "README.md",
+      "README",
+      "setup.py",
+    ]
+
     for f in os.listdir(directory):
       dest = os.path.join(directory, name, f)
+
+      file_name = f.split("/")[-1]
+
+      if file_name in PROJECT_FILES:
+        continue
 
       try:
         os.makedirs('/'.join(dest.split("/")[:-1]))
