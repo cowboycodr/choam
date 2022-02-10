@@ -48,6 +48,7 @@ class Choam:
             "README.md",
             "README",
             "setup.py",
+            "setup",
         ]
 
         for f in os.listdir(directory):
@@ -216,7 +217,7 @@ class Choam:
         modules = config["modules"]
 
         template = {
-            f"\\setup.py": create_setup_file(
+            f"\\setup": create_setup_file(
                 name, version, description, keywords, modules, repo_url
             )
         }
@@ -298,7 +299,7 @@ class Choam:
 
         Choam._log("Attempting real publication to https://test.pypi.org/legacy")
 
-        subprocess.call([sys.executable, "-m", "setup.py", "sdist", "bdist_wheel"])
+        subprocess.call([sys.executable, "setup", "sdist", "bdist_wheel"])
         subprocess.call([sys.executable, "-m", "twine", "upload", "dist/*"])
 
         Choam._log("Real publication attempt completed")
