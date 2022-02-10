@@ -98,6 +98,7 @@ class Choam:
         }
 
         FS.construct_from_dict(template, directory)
+        self.find_dependencies()
 
     def init(self, adapt: Optional[bool] = None):
         """
