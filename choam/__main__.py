@@ -4,10 +4,10 @@ import shutil
 import pkg_resources
 from typing import Optional
 
+from choam.constants import FOLDER_SEPERATOR, SETUP_FILE_NAME
 from choam.create_setup_file import create_setup_file
 from choam.find_dependencies import find_dependencies
 from choam.folder_structure import FolderStructure as FS
-from choam.constants import FOLDER_SEPERATOR
 from choam.gitignore import gitignore
 
 import toml
@@ -230,7 +230,7 @@ class Choam:
         modules = config["modules"]
 
         template = {
-            f"\\setup.py": create_setup_file(
+            f"\\{SETUP_FILE_NAME}": create_setup_file(
                 name, version, description, keywords, modules, repo_url
             )
         }
@@ -312,7 +312,7 @@ class Choam:
 
         Choam._log("Attempting real publication to https://test.pypi.org/legacy")
 
-        subprocess.call([sys.executable, "setup", "sdist", "bdist_wheel"])
+        subprocess.call([sys.executable, f"{SETUP_FILE_NAME}", "sdist", "bdist_wheel"])
         subprocess.call([sys.executable, "-m", "twine", "upload", "dist/*"])
 
         Choam._log("Real publication attempt completed")
