@@ -4,7 +4,7 @@ import shutil
 import pkg_resources
 from typing import Optional
 
-from choam.constants import FOLDER_SEPERATOR, SETUP_FILE_NAME
+from choam.constants import FOLDER_SEPERATOR, SETUP_FILE_NAME, PYTHON_INTERPRETER
 from choam.create_setup_file import create_setup_file
 from choam.find_dependencies import find_dependencies
 from choam.folder_structure import FolderStructure as FS
@@ -190,11 +190,11 @@ class Choam:
         project_folder = Choam._get_config()["package"]["name"].lower()
 
         if not relative_path:
-            subprocess.call([sys.executable, "-m", project_folder, *args])
+            subprocess.call([PYTHON_INTERPRETER, "-m", project_folder, *args])
             return
 
         subprocess.call(
-            [sys.executable, os.path.join(os.getcwd(), project_folder, relative_path)]
+            [PYTHON_INTERPRETER, os.path.join(os.getcwd(), project_folder, relative_path)]
         )
 
     def setup(self):
@@ -297,7 +297,7 @@ class Choam:
 
             subprocess.call(
                 [
-                    sys.executable,
+                    PYTHON_INTERPRETER,
                     "-m",
                     "pip",
                     "install",
@@ -313,8 +313,8 @@ class Choam:
 
         Choam._log("Attempting real publication to https://test.pypi.org/legacy")
 
-        subprocess.call([sys.executable, f"{SETUP_FILE_NAME}", "sdist", "bdist_wheel"])
-        subprocess.call([sys.executable, "-m", "twine", "upload", "dist/*"])
+        subprocess.call([PYTHON_INTERPRETER, f"{SETUP_FILE_NAME}", "sdist", "bdist_wheel"])
+        subprocess.call([PYTHON_INTERPRETER, "-m", "twine", "upload", "dist/*"])
 
         Choam._log("Real publication attempt completed")
 
