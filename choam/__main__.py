@@ -37,6 +37,19 @@ class Choam:
             print(f"\t{message}")
         print()
 
+    def config(self, key: str, *values):
+        if len(values) == 0:
+            return
+        
+        if len(values) == 1:
+            values = values[0]
+            
+        config = Choam._get_config()
+        
+        config['package'][key] = values
+        
+        Choam._set_config(toml.dumps(config))
+
     def _adapt(self, directory: str, name: str):
         """
         Adapt an existing project directory to Choam's structure
@@ -217,7 +230,7 @@ class Choam:
         modules = config["modules"]
 
         template = {
-            f"\\setup": create_setup_file(
+            f"\\setup.py": create_setup_file(
                 name, version, description, keywords, modules, repo_url
             )
         }
