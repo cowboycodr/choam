@@ -14,7 +14,6 @@ import toml
 import fire
 import subprocess
 
-
 class Choam:
     def __init__(self):
         pass

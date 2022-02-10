@@ -6,11 +6,6 @@ import platform
 FOLDER_SEPERATOR: str
 SETUP_FILE_NAME: str
 
-# system details
-PYTHON_INTERPRETER: str = (
-    str(Path(os.__file__).parents[2]) + FOLDER_SEPERATOR + "python.exe"
-)
-
 ### Processing platform specific configurations
 if platform.system().lower() == "windows":
     FOLDER_SEPERATOR = "\\"
@@ -18,3 +13,8 @@ if platform.system().lower() == "windows":
 else:
     FOLDER_SEPERATOR = "/"
     SETUP_FILE_NAME = "setup.py"
+    
+# system details
+PYTHON_INTERPRETER: str = (
+    str(Path(os.__file__).parents[1]) + FOLDER_SEPERATOR + "python.exe"
+)
