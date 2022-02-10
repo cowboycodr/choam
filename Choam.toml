@@ -1,6 +1,6 @@
 [package]
 name = "Choam"
-version = "0.1.7"
+version = "0.1.8"
 description = "Python project scaffolder/manager"
 repo = "https://github.com/cowboycodr/choam"
 keywords = [ "package", "manager",]
@@ -11,8 +11,8 @@ pathlib = "*"
 platform = "*"
 
 [modules]
-fire = "*"
 toml = "*"
+fire = "*"
 choam = "*"
 typing = "*"
 importlib = "*"
