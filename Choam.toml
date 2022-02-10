@@ -7,14 +7,12 @@ keywords = [ "package", "manager",]
 
 [modules-ignore]
 shutil = "*"
+pathlib = "*"
 
 [modules]
-fire = "*"
 toml = "*"
+fire = "*"
 choam = "*"
 typing = "*"
-pathlib = "*"
 importlib = "*"
 findimports = "*"
-twine = "*"
-wheel = "*"
