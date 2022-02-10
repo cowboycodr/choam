@@ -161,7 +161,7 @@ class Choam:
 
         FS.construct_from_dict(template, directory)
 
-    def run(self, relative_path: Optional[str] = None):
+    def run(self, relative_path: Optional[str] = None, *args):
         """
         Run `Choam`'s default entry point or specify
         a relative filepath for Choam to run.
@@ -176,7 +176,7 @@ class Choam:
         project_folder = Choam._get_config()["package"]["name"].lower()
 
         if not relative_path:
-            subprocess.call([sys.executable, "-m", project_folder])
+            subprocess.call([sys.executable, "-m", project_folder, *args])
             return
 
         subprocess.call(
