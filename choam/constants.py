@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 import platform
 
@@ -15,6 +16,4 @@ else:
     SETUP_FILE_NAME = "setup.py"
     
 # system details
-PYTHON_INTERPRETER: str = (
-    str(Path(os.__file__).parents[1]) + FOLDER_SEPERATOR + "python.exe"
-)
+PYTHON_INTERPRETER = sys.executable
