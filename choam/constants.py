@@ -4,7 +4,7 @@ import platform
 from pathlib import Path
 
 # system details
-OPERATING_SYSTEM = platform.platform().lower()
+OPERATING_SYSTEM = platform.system().lower()
 PYTHON_INTERPRETER: str = sys.executable
 
 # configurations

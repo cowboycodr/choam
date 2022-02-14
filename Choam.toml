@@ -11,11 +11,9 @@ pathlib = "*"
 platform = "*"
 
 [modules]
-toml = "*"
 fire = "*"
+toml = "*"
 choam = "*"
 typing = "*"
 importlib = "*"
 findimports = "*"
-twine = "*"
-wheel = "*"
