@@ -4,6 +4,7 @@ import shutil
 import pkg_resources
 from typing import Optional
 
+from choam.create_setup_file import create_setup_file
 from choam.constants import FOLDER_SEPERATOR, SETUP_FILE_NAME, PYTHON_INTERPRETER
 from choam.find_dependencies import find_dependencies
 from choam.folder_structure import FolderStructure as FS
@@ -122,6 +123,8 @@ class Choam:
             f"{directory}\\Choam.toml": f'[package]\nname = "{name}\nversion = "0.0.1"\ndescription = ""\n\n[modules-ignore]\n\n[modules]',
             f"{directory}\\README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
             f"{directory}\\.gitignore": gitignore,
+            f"{directory}\\setup.py": "",
+            f"{directory}\\setup.cfg": "# Custom configurations go here",
         }
 
         FS.construct_from_dict(template, directory)
@@ -169,6 +172,8 @@ class Choam:
             f"\\{folder_name}\\Choam.toml": f'[package]\nname = "{name}"\nversion = "0.0.1"\ndescription = ""\n\n[modules]\nchoam = "*"',
             f"\\{folder_name}\\README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
             f"\\{folder_name}\\.gitignore": gitignore,
+            f"\\{folder_name}\\setup.py": "",
+            f"\\{folder_name}\\setup.cfg": "# Custom configurations go here"
         }
 
         FS.construct_from_dict(template, directory)
@@ -195,59 +200,55 @@ class Choam:
             [PYTHON_INTERPRETER, os.path.join(os.getcwd(), project_folder, relative_path)]
         )
 
-    # TODO: Rewrite to work with already-existing setup configurations
-    # def setup(self):
-    #     """
-    #     Setup configurations for PyPi in `setup.py`.
-
-    #     Additional configurations may be done to `setup.py`
-    #     after this command has been run.
-    #     """
-
-    #     directory = os.getcwd()
-
-    #     config = Choam._get_config()
-
-    #     package_config = config["package"]
-    #     name = package_config["name"]
-    #     version = package_config["version"]
-
-    #     try:
-    #         description = package_config["description"]
-    #     except:
-    #         description = ""
-
-    #     try:
-    #         repo_url = package_config["repo"]
-    #     except:
-    #         repo_url = ""
-
-    #     try:
-    #         keywords = package_config["keywords"]
-    #     except:
-    #         keywords = []
-
-    #     modules = config["modules"]
-
-    #     template = {
-    #         f"\\{SETUP_FILE_NAME}": create_setup_file(
-    #             name, version, description, keywords, modules, repo_url
-    #         )
-    #     }
-
-    #     self.find_dependencies()
-
-    #     FS.construct_from_dict(template, f"{directory}\\")
-
-    #     Choam._log_multiple(
-    #         [
-    #             f"Successfully setup '{name}' for PyPi publication",
-    #             f"Use '$ choam publish' when configurations have been set",
-    #         ]
-    #     )
-    
     def setup(self):
-        Choam._log("`choam setup`: is temporarily out of support")
+        """
+        Setup configurations for PyPi in `setup.py`.
+
+        Additional configurations may be done to `setup.py`
+        after this command has been run.
+        """
+
+        directory = os.getcwd()
+
+        config = Choam._get_config()
+
+        package_config = config["package"]
+        name = package_config["name"]
+        version = package_config["version"]
+
+        try:
+            description = package_config["description"]
+        except:
+            description = ""
+
+        try:
+            repo_url = package_config["repo"]
+        except:
+            repo_url = ""
+
+        try:
+            keywords = package_config["keywords"]
+        except:
+            keywords = []
+
+        modules = config["modules"]
+
+        template = {
+            f"\\{SETUP_FILE_NAME}": create_setup_file(
+                name, version, description, keywords, modules, repo_url
+            )
+        }
+
+        self.find_dependencies()
+
+        FS.construct_from_dict(template, f"{directory}\\")
+
+        Choam._log_multiple(
+            [
+                f"Successfully setup '{name}' for PyPi publication",
+                f"Use '$ choam publish' when configurations have been set",
+            ]
+        )
 
     def add(
         self,
