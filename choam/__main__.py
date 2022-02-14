@@ -5,7 +5,7 @@ import pkg_resources
 from typing import Optional
 
 from choam.create_setup_file import create_setup_file
-from choam.constants import FOLDER_SEPERATOR, SETUP_FILE_NAME, PYTHON_INTERPRETER
+from choam.constants import FOLDER_SEPERATOR, SETUP_FILE_NAME, PYTHON_INTERPRETER, OPERATING_SYSTEM
 from choam.find_dependencies import find_dependencies
 from choam.folder_structure import FolderStructure as FS
 from choam.gitignore import gitignore
@@ -28,13 +28,17 @@ class Choam:
 
     def _log(message: str):
         print(f"\n\t{message}")
-        print()
+        
+        if OPERATING_SYSTEM != "windows":  
+            print()
 
     def _log_multiple(messages: "list[str]"):
         print()
         for message in messages:
             print(f"\t{message}")
-        print()
+            
+        if OPERATING_SYSTEM != "windows":
+            print()
 
     def config(self, key: str, *values):
         if len(values) == 0:
