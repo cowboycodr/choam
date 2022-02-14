@@ -333,6 +333,8 @@ class Choam:
 
         Choam._set_config(toml.dumps(new_config))
 
+def main():
+    fire.Fire(Choam())
 
 if __name__ == "__main__":
-    fire.Fire(Choam())
+    main()
