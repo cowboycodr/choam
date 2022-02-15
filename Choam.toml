@@ -1,6 +1,6 @@
 [package]
 name = "Choam"
-version = "0.1.11"
+version = "0.1.13"
 description = "Python project scaffolder/manager"
 repo = "https://github.com/cowboycodr/choam"
 keywords = [ "package", "manager",]
