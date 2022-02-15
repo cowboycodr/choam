@@ -64,6 +64,8 @@ class Choam:
             "README.md",
             "README",
             "setup.py",
+            "LICENSE.txt",
+            ".git"
         ]
 
         for f in os.listdir(directory):
@@ -84,8 +86,8 @@ class Choam:
                 continue
 
             try:
-                os.makedirs(dest, exist_ok=True)
-            except FileExistsError:
+                os.makedirs(dest, mode=0o666, exist_ok=True)
+            except:
                 pass
 
             do_move = input(f"Would you like to move: {os.path.abspath(file_name)}? (Y/n) ")
