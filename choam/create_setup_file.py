@@ -33,7 +33,7 @@ def create_setup_file(
             "config = read_configurations('setup.cfg')",
             "",
             "setup(",
-            f'    **config,'
+            f'    **config,',
             f'    name="{name}",',
             f'    version="{version}",',
             f'    description="{description}",',

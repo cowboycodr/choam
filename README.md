@@ -24,7 +24,7 @@ The most useful snippets of `Choam`
 #### Find all required dependencies and update `Choam.toml` accordingly
 `$ choam deps`
 
-#### Setup config files for publication to PyPi
+#### Setup config files for publication to PyPi according to `Choam.toml`
 `$ choam setup`
 
 #### Start publication to PyPi

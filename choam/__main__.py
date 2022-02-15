@@ -204,14 +204,7 @@ class Choam:
             [PYTHON_INTERPRETER, os.path.join(os.getcwd(), project_folder, relative_path)]
         )
 
-    def setup(self):
-        """
-        Setup configurations for PyPi in `setup.py`.
-
-        Additional configurations may be done to `setup.py`
-        after this command has been run.
-        """
-
+    def _init_setup(self):
         directory = os.getcwd()
 
         config = Choam._get_config()
@@ -243,16 +236,58 @@ class Choam:
             )
         }
 
-        self.deps()
-
-        FS.construct_from_dict(template, f"{directory}\\")
-
         Choam._log_multiple(
             [
                 f"Successfully setup '{name}' for PyPi publication",
                 f"Use '$ choam publish' when configurations have been set",
             ]
         )
+
+        FS.construct_from_dict(template, f"{directory}\\")
+
+    def setup(self):
+        """
+        Configure `setup.py` according to `Choam.toml` while 
+        keeping all other configurations.
+
+        If `setup.py` file does not exist then it will create
+        it.
+
+        Additional configurations may be done to `setup.py`
+        after this command has been run.
+        """
+
+        if not FS.is_choam_project():
+            Choam._log(f"{os.getcwd()}: not a Choam project.")
+
+            return
+
+        if not os.path.exists("setup.py"):
+            self._init_setup()
+
+            return
+
+        config = Choam._get_config()
+        new_setup_file = ''
+
+        # Rewrite with `Choam.toml` configurations
+        with open("./setup.py", "r") as f:
+            format_line = lambda l: '\t' + l + ',\n'
+
+            for line in f.readlines():
+                if line.strip().startswith("version"):
+                    new_setup_file += format_line(f'version=\"{config["package"]["version"]}\"')
+                
+                elif line.strip().startswith("install_requires"):
+                    modules = config['modules']
+
+                    new_setup_file += format_line(f'install_requires={[mod for mod in modules]}')
+
+                else:
+                    new_setup_file += line
+
+        with open("setup.py", "w") as f:
+            f.write(new_setup_file)
 
     def add(
         self,
