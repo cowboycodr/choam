@@ -362,7 +362,7 @@ class Choam:
                 ]
             )
 
-    def publish(self, setup_file_name: Optional[str] = None):
+    def publish(self):
         """
         Publish package to https://PyPi.org following `_file_name.py` and `setup.cfg`
         configurations
@@ -373,9 +373,6 @@ class Choam:
         Args:
             :setup_file_name: file to pull configurations from by default `setup.py`
         """
-
-        if setup_file_name:
-            SETUP_FILE_NAME = setup_file_name
 
         self.add("twine")
         self.add("wheel")
