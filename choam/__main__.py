@@ -325,18 +325,30 @@ class Choam:
 
         Choam._log("Real publication attempt completed")
 
-    def find_dependencies(self):
+    def deps(self):
         """
         Automatically search project files for imported
         depedencies and add them to `Choam.toml` as well
         as setup
         """
 
-        depedencies = find_dependencies()
-        new_config = Choam._get_config()
-        new_config["modules"] = {dep: "*" for dep in sorted(list(depedencies), key=len)}
+        dependencies = find_dependencies()
+        config = Choam._get_config()
 
-        Choam._set_config(toml.dumps(new_config))
+        for dep in config['modules-ignore']:
+            if dep in config['modules'].keys():
+                config['modules'].pop(dep)
+
+        # Merging pre-existing dependencies with new found ones
+        dep_config = {
+            **config['modules'], 
+            **{dep: "*" for dep in dependencies}
+        }
+
+        # Sorting configurations by length
+        config['modules'] = {key: dep_config[key] for key in sorted(dep_config, key=len)}
+
+        Choam._set_config(toml.dumps(config))
 
 def main():
     fire.Fire(Choam())

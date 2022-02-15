@@ -19,7 +19,7 @@ The most useful snippets of `Choam`
 `$ choam install`
 
 #### Find all required dependencies and update `Choam.toml` accordingly
-`$ choam find-dependencies`
+`$ choam deps`
 
 #### Setup config files for publication to PyPi
 `$ choam setup`
