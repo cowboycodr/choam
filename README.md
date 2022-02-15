@@ -16,9 +16,9 @@ Choam, automating the nooks and crannies of Python.
 ## Snippets
 The most useful snippets of `Choam`
 
-#### To create a new project
+> Note: Dependeing on your OS, Choam might have to be prefixed with `$ python3 -m` like this, `$ python3 -m choam <command>` 
 
-> Note: Dependening on your operating system the Choam command might have to be prefixed with `python3 -m`
+#### To create a new project
 
 `$ choam new <project_name>`
 
