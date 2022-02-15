@@ -64,7 +64,6 @@ class Choam:
             "README.md",
             "README",
             "setup.py",
-            "setup",
         ]
 
         for f in os.listdir(directory):
@@ -89,10 +88,13 @@ class Choam:
             except FileExistsError:
                 pass
 
-            try:
-                shutil.move(f, dest)
-            except:
-                pass
+            do_move = input(f"Would you like to move: {os.path.abspath(file_name)}? (Y/n) ")
+
+            if do_move.lower().startswith("y"):
+                try:
+                    shutil.move(f, dest)
+                except:
+                    pass
 
         template = {
             f"\\Choam.toml": f'[package]\nname="{name}"\nversion="0.0.0"\ndescription=""\nrepo="*required*"\nkeywords=[]\n\n[modules-ignore]\n\n[modules]',
@@ -101,7 +103,7 @@ class Choam:
         }
 
         FS.construct_from_dict(template, directory)
-        self.find_dependencies()
+        self.deps()
 
     def init(self, adapt: Optional[bool] = None):
         """
