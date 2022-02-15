@@ -15,4 +15,5 @@ setup(
         'Source': 'https://github.com/cowboycodr/choam'
     },
     long_description=long_description,
+    long_description_content_type="text/markdown"
 )
