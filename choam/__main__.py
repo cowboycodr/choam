@@ -243,7 +243,7 @@ class Choam:
             )
         }
 
-        self.find_dependencies()
+        self.deps()
 
         FS.construct_from_dict(template, f"{directory}\\")
 
