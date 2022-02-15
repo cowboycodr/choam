@@ -1,9 +1,12 @@
 # Choam
+<a href="https://pypi.org/project/choam"><img src="https://img.shields.io/pypi/dw/choam"></a>
+<a href="https://pypi.org/project/choam"><img src="https://img.shields.io/pypi/v/choam"></a>
+<a href="https://github.com/cowboycodr/choam"><img src="https://shields.io/tokei/lines/github/cowboycodr/choam"></a>
+<a href="https://github.com/cowboycodr/choam"><img src="https://img.shields.io/github/repo-size/cowboycodr/choam"></a>
 
 Python enviroment manager based around making depedency management, and publication easier.
 
 ## Snippets
-___
 The most useful snippets of `Choam`
 
 #### To create a new project
