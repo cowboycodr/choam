@@ -281,11 +281,25 @@ class Choam:
         if install:
             self.install(find_dependencies=False)
 
-    def install(self, find_dependencies: Optional[bool] = None):
-        config = Choam._get_config()
+    def install(self, dep: Optional[str] = None, find_deps: Optional[bool] = None):
+        """
+        Install all required dependencies from `Choam.toml`
+        modules section.
 
-        if find_dependencies:
-            self.find_dependencies()
+        Args
+            :dep: add depedency to required modules and install
+
+            :find_deps: find project's required dependencies and install
+            immediately
+        """
+
+        if dep:
+            self.add(dep)
+
+        if find_deps:
+            self.deps()
+
+        config = Choam._get_config()
 
         required_mods = {mod for mod in config["modules"]}
         installed_mods = {mod.key for mod in pkg_resources.working_set}
@@ -313,7 +327,21 @@ class Choam:
                 ]
             )
 
-    def publish(self):
+    def publish(self, setup_file_name: Optional[str] = None):
+        """
+        Publish package to https://PyPi.org following `_file_name.py` and `setup.cfg`
+        configurations
+
+        > Note: this method requires your https://PyPi.org credentials for twine
+        to properly publish.
+
+        Args:
+            :setup_file_name: file to pull configurations from by default `setup.py`
+        """
+
+        if setup_file_name:
+            SETUP_FILE_NAME = setup_file_name
+
         self.add("twine")
         self.add("wheel")
         self.install()
