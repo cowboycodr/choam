@@ -28,8 +28,12 @@ def create_setup_file(
     return "\n".join(
         [
             "from setuptools import setup, find_packages",
+            "from setuptools.config import read_configurations",
+            "",
+            "config = read_configurations('setup.cfg')",
             "",
             "setup(",
+            f'    **config,'
             f'    name="{name}",',
             f'    version="{version}",',
             f'    description="{description}",',
