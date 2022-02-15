@@ -13,10 +13,11 @@ def create_setup_file(
 ):
     """
     Generate basic setup.py file contents
-    Package lists are currently generated automatically
-    Arguments:
-      @name - project name
-      @version - current version
+
+    Args:
+      :name: project name
+
+      :version: current version
     """
 
     new_dependencies = set(find_dependencies())
