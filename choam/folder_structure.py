@@ -1,5 +1,6 @@
 import os
 
+from choam.constants import FOLDER_SEPERATOR
 
 class FolderStructure:
     """
@@ -39,16 +40,19 @@ class FolderStructure:
     @staticmethod
     def _create_file(filepath: str, content: "str | None") -> str:
         filepath = os.path.abspath(filepath)
-        filepath = filepath.replace("\\", "/")
 
-        file_name = filepath.split("/")[-1]
+        file_name = filepath.split(FOLDER_SEPERATOR)[-1]
         folder_path = filepath.replace(file_name, "")
 
         if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
+            try:
+                os.makedirs(folder_path)
+            except:
+                pass
 
-        with open(filepath, "w") as file:
-            file.write(content if content else "")
+        if not os.path.exists(filepath):
+            with open(filepath, "w") as file:
+                file.write(content if content else "")
 
         return filepath
 
@@ -61,10 +65,10 @@ class FolderStructure:
         output_dir = os.path.abspath(output_dir)
 
         for file_name in _dict.keys():
-            path = f"{output_dir}\\{file_name}"
+            path = f"{output_dir}{FOLDER_SEPERATOR}{file_name}"
             content = _dict[file_name]
 
-            if os.path.exists(os.path.abspath(path)):
+            if os.path.exists(path):
                 continue
 
             FolderStructure._create_file(path, content)

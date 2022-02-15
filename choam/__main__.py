@@ -99,9 +99,9 @@ class Choam:
                     pass
 
         template = {
-            f"\\Choam.toml": f'[package]\nname="{name}"\nversion="0.0.0"\ndescription=""\nrepo="*required*"\nkeywords=[]\n\n[modules-ignore]\n\n[modules]',
-            f"\\README.md": f"{name}\n###This project was structure with [Choam](https://github.com/cowboycodr/choam)",
-            f"\\.gitignore": gitignore,
+            f"{FOLDER_SEPERATOR}Choam.toml": f'[package]\nname="{name}"\nversion="0.0.0"\ndescription=""\nrepo="*required*"\nkeywords=[]\n\n[modules-ignore]\n\n[modules]',
+            f"{FOLDER_SEPERATOR}README.md": f"{name}\n###This project was structure with [Choam](https://github.com/cowboycodr/choam)",
+            f"{FOLDER_SEPERATOR}.gitignore": gitignore,
         }
 
         FS.construct_from_dict(template, directory)
