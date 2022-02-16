@@ -430,6 +430,53 @@ class Choam:
 
         Choam._set_config(toml.dumps(config))
 
+    def reqs(self):
+        """
+        Convert `Choam.toml` to `requirements.txt` accordingly
+        """
+
+        config = Choam._get_config()
+        directory = os.getcwd()
+        path = f"requirements.txt"
+
+        pip_versions_proc = subprocess.Popen([PYTHON_INTERPRETER, "-m", "pip", "freeze"], stdout=subprocess.PIPE)
+        pip_versions_string = str(pip_versions_proc.communicate()[0])
+        pip_versions = {}
+
+        for mod in pip_versions_string.split("\\n"):
+            if mod.count("==") > 0:
+                mod_name = mod.split("==")[0]
+                mod_ver = mod.split("==")[1]
+            elif mod.count("@"):
+                mod_name = mod.split("@")[0].strip()
+                mod_ver = mod.split("@")[1].strip()
+            else:
+                continue
+
+            pip_versions[mod_name] = mod_ver
+
+        requirements_content = ''
+        for mod in config['modules']:
+            mod_name = mod
+            mod_ver = config['modules'][mod_name]
+
+            if mod_ver == "*":
+                try:
+                    mod_ver = pip_versions[mod_name]
+                except:
+                    continue
+
+            requirements_content += f'{mod_name}=={mod_ver}\n'
+
+        template = {
+            path: requirements_content
+        }
+
+        if os.path.exists(path):
+            Choam._log(f"{path}: Already exists. Either delete or rewrite requirements accordingly.")
+
+        FS.construct_from_dict(template, directory)
+
 
 def main():
     fire.Fire(Choam())
