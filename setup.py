@@ -1,3 +1,4 @@
+from importlib_metadata import entry_points
 from setuptools import setup, find_packages
 import pathlib
 
@@ -8,12 +9,18 @@ setup(
     name="Choam",
 	version="0.1.14",
     description="Python project scaffolder/manager",
-    packages=find_packages(),
+    packages=["choam"],
     keywords=['package', 'manager'],
 	install_requires=['fire', 'toml', 'choam', 'twine', 'wheel', 'typing', 'importlib', 'findimports'],
     project_urls={
         'Source': 'https://github.com/cowboycodr/choam'
     },
     long_description=long_description,
-    long_description_content_type="text/markdown"
+    long_description_content_type="text/markdown",
+    include_package_data=True,
+    entry_points={
+        "console_scripts": [
+            "choam = choam:main"
+        ]
+    }
 )
