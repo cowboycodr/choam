@@ -7,7 +7,7 @@ long_description = (directory / "README.md").read_text()
 
 setup(
     name="Choam",
-	version="0.1.14",
+	version="0.1.15",
     description="Python project scaffolder/manager",
     packages=["choam"],
     keywords=['package', 'manager'],
