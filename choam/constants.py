@@ -15,11 +15,11 @@ SETUP_FILE_NAME: str
 if OPERATING_SYSTEM == "windows":
     FOLDER_SEPERATOR = "\\"
     SETUP_FILE_NAME = "setup"
-    
-    PYTHON_INTERPRETER = os.popen("where python").read().split('\n')[0]
-    
+
+    PYTHON_INTERPRETER = os.popen("where python").read().split("\n")[0]
+
 else:
     FOLDER_SEPERATOR = "/"
     SETUP_FILE_NAME = "setup.py"
-    
+
     PYTHON_INTERPRETER = os.popen("which python3").read().split("\n")[0]

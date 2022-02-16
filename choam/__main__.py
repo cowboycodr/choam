@@ -5,7 +5,12 @@ import pkg_resources
 from typing import Optional
 
 from choam.create_setup_file import create_setup_file
-from choam.constants import FOLDER_SEPERATOR, SETUP_FILE_NAME, PYTHON_INTERPRETER, OPERATING_SYSTEM
+from choam.constants import (
+    FOLDER_SEPERATOR,
+    SETUP_FILE_NAME,
+    PYTHON_INTERPRETER,
+    OPERATING_SYSTEM,
+)
 from choam.find_dependencies import find_dependencies
 from choam.folder_structure import FolderStructure as FS
 from choam.gitignore import gitignore
@@ -13,6 +18,7 @@ from choam.gitignore import gitignore
 import toml
 import fire
 import subprocess
+
 
 class Choam:
     def __init__(self):
@@ -28,29 +34,29 @@ class Choam:
 
     def _log(message: str):
         print(f"\n\t{message}")
-        
-        if OPERATING_SYSTEM != "windows":  
+
+        if OPERATING_SYSTEM != "windows":
             print()
 
     def _log_multiple(messages: "list[str]"):
         print()
         for message in messages:
             print(f"\t{message}")
-            
+
         if OPERATING_SYSTEM != "windows":
             print()
 
     def config(self, key: str, *values):
         if len(values) == 0:
             return
-        
+
         if len(values) == 1:
             values = values[0]
-            
+
         config = Choam._get_config()
-        
-        config['package'][key] = values
-        
+
+        config["package"][key] = values
+
         Choam._set_config(toml.dumps(config))
 
     def _adapt(self, directory: str, name: str):
@@ -65,7 +71,7 @@ class Choam:
             "README",
             "setup.py",
             "LICENSE.txt",
-            ".git"
+            ".git",
         ]
 
         for f in os.listdir(directory):
@@ -90,7 +96,9 @@ class Choam:
             except:
                 pass
 
-            do_move = input(f"Would you like to move: {os.path.abspath(file_name)}? (Y/n) ")
+            do_move = input(
+                f"Would you like to move: {os.path.abspath(file_name)}? (Y/n) "
+            )
 
             if do_move.lower().startswith("y"):
                 try:
@@ -181,7 +189,7 @@ class Choam:
             f"\\{folder_name}\\README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
             f"\\{folder_name}\\.gitignore": gitignore,
             f"\\{folder_name}\\setup.py": "",
-            f"\\{folder_name}\\setup.cfg": "# Custom configurations go here"
+            f"\\{folder_name}\\setup.cfg": "# Custom configurations go here",
         }
 
         FS.construct_from_dict(template, directory)
@@ -205,7 +213,10 @@ class Choam:
             return
 
         subprocess.call(
-            [PYTHON_INTERPRETER, os.path.join(os.getcwd(), project_folder, relative_path)]
+            [
+                PYTHON_INTERPRETER,
+                os.path.join(os.getcwd(), project_folder, relative_path),
+            ]
         )
 
     def _init_setup(self):
@@ -251,7 +262,7 @@ class Choam:
 
     def setup(self):
         """
-        Configure `setup.py` according to `Choam.toml` while 
+        Configure `setup.py` according to `Choam.toml` while
         keeping all other configurations.
 
         If `setup.py` file does not exist then it will create
@@ -272,20 +283,24 @@ class Choam:
             return
 
         config = Choam._get_config()
-        new_setup_file = ''
+        new_setup_file = ""
 
         # Rewrite with `Choam.toml` configurations
         with open("./setup.py", "r") as f:
-            format_line = lambda l: '\t' + l + ',\n'
+            format_line = lambda l: "\t" + l + ",\n"
 
             for line in f.readlines():
                 if line.strip().startswith("version"):
-                    new_setup_file += format_line(f'version=\"{config["package"]["version"]}\"')
-                
-                elif line.strip().startswith("install_requires"):
-                    modules = config['modules']
+                    new_setup_file += format_line(
+                        f'version="{config["package"]["version"]}"'
+                    )
 
-                    new_setup_file += format_line(f'install_requires={[mod for mod in modules]}')
+                elif line.strip().startswith("install_requires"):
+                    modules = config["modules"]
+
+                    new_setup_file += format_line(
+                        f"install_requires={[mod for mod in modules]}"
+                    )
 
                 else:
                     new_setup_file += line
@@ -384,7 +399,9 @@ class Choam:
 
         Choam._log("Attempting real publication to https://test.pypi.org/legacy")
 
-        subprocess.call([PYTHON_INTERPRETER, f"{SETUP_FILE_NAME}", "sdist", "bdist_wheel"])
+        subprocess.call(
+            [PYTHON_INTERPRETER, f"{SETUP_FILE_NAME}", "sdist", "bdist_wheel"]
+        )
         subprocess.call([PYTHON_INTERPRETER, "-m", "twine", "upload", "dist/*"])
 
         Choam._log("Real publication attempt completed")
@@ -399,23 +416,24 @@ class Choam:
         dependencies = find_dependencies()
         config = Choam._get_config()
 
-        for dep in config['modules-ignore']:
-            if dep in config['modules'].keys():
-                config['modules'].pop(dep)
+        for dep in config["modules-ignore"]:
+            if dep in config["modules"].keys():
+                config["modules"].pop(dep)
 
         # Merging pre-existing dependencies with new found ones
-        dep_config = {
-            **config['modules'], 
-            **{dep: "*" for dep in dependencies}
-        }
+        dep_config = {**config["modules"], **{dep: "*" for dep in dependencies}}
 
         # Sorting configurations by length
-        config['modules'] = {key: dep_config[key] for key in sorted(dep_config, key=len)}
+        config["modules"] = {
+            key: dep_config[key] for key in sorted(dep_config, key=len)
+        }
 
         Choam._set_config(toml.dumps(config))
 
+
 def main():
     fire.Fire(Choam())
+
 
 if __name__ == "__main__":
     main()

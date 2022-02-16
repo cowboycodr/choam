@@ -2,6 +2,7 @@ import os
 
 from choam.constants import FOLDER_SEPERATOR
 
+
 class FolderStructure:
     """
     `Choam's` folder structure consturction/destruction
