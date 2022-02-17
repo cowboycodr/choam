@@ -1,6 +1,6 @@
 [package]
 name = "Choam"
-version = "0.1.16"
+version = "0.1.17"
 description = "Python project scaffolder/manager"
 repo = "https://github.com/cowboycodr/choam"
 keywords = [ "package", "manager",]
@@ -9,14 +9,6 @@ keywords = [ "package", "manager",]
 shutil = "*"
 pathlib = "*"
 platform = "*"
-
-[script.install-reqs] # choam run install-reqs
-perspective = "."
-command = "${PYTHON} -m pip install -r ${CWD}/requirements.txt"
-
-[script.make-docs]
-perspective = "docs"
-command = "make html"
 
 [modules]
 fire = "*"
@@ -28,3 +20,11 @@ typing = "*"
 importlib = "*"
 findimports = "*"
 autoapi = "*"
+
+[script.install-reqs]
+perspective = "."
+command = "${PYTHON} -m pip install -r ${CWD}/requirements.txt"
+
+[script.make-docs]
+perspective = "docs"
+command = "make html"

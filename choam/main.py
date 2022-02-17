@@ -134,13 +134,13 @@ class Choam:
             return
 
         template = {
-            f"{directory}\\{name}\\__main__.py": "",
-            f"{directory}\\{name}\\__init__.py": "__version__ == '0.1'",
-            f"{directory}\\Choam.toml": f'[package]\nname = "{name}\nversion = "0.0.1"\ndescription = ""\n\n[modules-ignore]\n\n[modules]',
-            f"{directory}\\README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
-            f"{directory}\\.gitignore": gitignore,
-            f"{directory}\\setup.py": "",
-            f"{directory}\\setup.cfg": "# Custom configurations go here",
+            f"{directory}{FOLDER_SEPERATOR}{name}{FOLDER_SEPERATOR}__main__.py": "",
+            f"{directory}{FOLDER_SEPERATOR}{name}{FOLDER_SEPERATOR}__init__.py": "__version__ == '0.1'",
+            f"{directory}{FOLDER_SEPERATOR}Choam.toml": f'[package]\nname = "{name}\nversion = "0.0.1"\ndescription = ""\n\n[modules-ignore]\n\n[modules]',
+            f"{directory}{FOLDER_SEPERATOR}README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
+            f"{directory}{FOLDER_SEPERATOR}.gitignore": gitignore,
+            f"{directory}{FOLDER_SEPERATOR}setup.py": "",
+            f"{directory}{FOLDER_SEPERATOR}setup.cfg": "# Custom configurations go here",
         }
 
         FS.construct_from_dict(template, directory)
@@ -183,13 +183,13 @@ class Choam:
 
         # Choam project template
         template = {
-            f"\\{folder_name}\\{folder_name}\\__main__.py": "",
-            f"\\{folder_name}\\{folder_name}\\__init__.py": "__version__ == '0.1'",
-            f"\\{folder_name}\\Choam.toml": f'[package]\nname = "{name}"\nversion = "0.0.1"\ndescription = ""\n\n[modules]\nchoam = "*"',
-            f"\\{folder_name}\\README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
-            f"\\{folder_name}\\.gitignore": gitignore,
-            f"\\{folder_name}\\setup.py": "",
-            f"\\{folder_name}\\setup.cfg": "# Custom configurations go here",
+            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}__main__.py": "",
+            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}__init__.py": "__version__ == '0.1'",
+            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}Choam.toml": f'[package]\nname = "{name}"\nversion = "0.0.1"\ndescription = ""\n\n[modules]\nchoam = "*"',
+            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
+            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}.gitignore": gitignore,
+            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}setup.py": "",
+            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}setup.cfg": "# Custom configurations go here",
         }
 
         FS.construct_from_dict(template, directory)
@@ -269,7 +269,7 @@ class Choam:
         modules = config["modules"]
 
         template = {
-            f"\\{SETUP_FILE_NAME}": create_setup_file(
+            f"{FOLDER_SEPERATOR}{SETUP_FILE_NAME}": create_setup_file(
                 name, version, description, keywords, modules, repo_url
             )
         }
@@ -281,7 +281,7 @@ class Choam:
             ]
         )
 
-        FS.construct_from_dict(template, f"{directory}\\")
+        FS.construct_from_dict(template, f"{directory}{FOLDER_SEPERATOR}")
 
     def setup(self):
         """
