@@ -10,6 +10,10 @@ shutil = "*"
 pathlib = "*"
 platform = "*"
 
+[script.install-reqs]
+perspective = "."
+command = "${PYTHON} -m pip install -r ${CWD}/requirements.txt"
+
 [modules]
 fire = "*"
 toml = "*"

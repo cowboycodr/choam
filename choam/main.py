@@ -194,30 +194,55 @@ class Choam:
 
         FS.construct_from_dict(template, directory)
 
-    def run(self, relative_path: Optional[str] = None, *args):
+    def run(self, path_or_script: str, file: Optional[bool] = None, enable_script_variables: Optional[bool] = True, *args):
         """
-        Run `Choam`'s default entry point or specify
-        a relative filepath for Choam to run.
+        Run a `Choam` script defined in `Choam.toml` or run project's default entry 
+        point or specify a relative filepath for Choam to run.
 
-        :relative_path: specific file for `Choam` to run
+        :path_or_script: specific filepath or script for `Choam` to run (default is script)
         """
 
         if not FS.is_choam_project():
             Choam._log("Not a Choam project.")
             return
 
-        project_folder = Choam._get_config()["package"]["name"].lower()
+        config = Choam._get_config()
+        project_folder = config['package']['name'].lower()
 
-        if not relative_path:
-            subprocess.call([PYTHON_INTERPRETER, "-m", project_folder, *args])
+        if file:
+            path = path_or_script
+
+            if not path:
+                subprocess.call([PYTHON_INTERPRETER, "-m", project_folder, *args])
+                return
+
+            subprocess.call(
+                [
+                    PYTHON_INTERPRETER,
+                    os.path.join(os.getcwd(), project_folder, path),
+                ]
+            )
             return
 
-        subprocess.call(
-            [
-                PYTHON_INTERPRETER,
-                os.path.join(os.getcwd(), project_folder, relative_path),
-            ]
-        )
+        script = path_or_script
+        current_dir = os.getcwd()
+        perspective_folder = os.path.abspath(os.path.join(project_folder, config['script'][script]['perspective']))
+        command = config['script'][script]['command']
+
+        script_variables = {
+            "PYTHON": PYTHON_INTERPRETER,
+            "CWD": current_dir
+        }
+
+        if enable_script_variables:
+            for var_name in script_variables.keys():
+                command = command.replace("${" + var_name + "}", script_variables[var_name])
+
+        if os.path.abspath(current_dir) == perspective_folder:
+            os.system(f"{command}")
+            return
+
+        os.system(f"cd {perspective_folder} && {command}")
 
     def _init_setup(self):
         directory = os.getcwd()
