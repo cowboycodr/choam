@@ -226,7 +226,7 @@ class Choam:
 
         script = path_or_script
         current_dir = os.getcwd()
-        perspective_folder = os.path.abspath(os.path.join(project_folder, config['script'][script]['perspective']))
+        perspective_folder = os.path.abspath(os.path.join(current_dir, config['script'][script]['perspective']))
         command = config['script'][script]['command']
 
         script_variables = {
@@ -238,9 +238,7 @@ class Choam:
             for var_name in script_variables.keys():
                 command = command.replace("${" + var_name + "}", script_variables[var_name])
 
-        if os.path.abspath(current_dir) == perspective_folder:
-            os.system(f"{command}")
-            return
+        Choam._log(command)
 
         os.system(f"cd {perspective_folder} && {command}")
 
