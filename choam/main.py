@@ -97,7 +97,7 @@ class Choam:
                 pass
 
             do_move = input(
-                f"Would you like to move: {os.path.abspath(file_name)}? (Y/n) "
+                f"Would you like to move: '{os.path.abspath(file_name)}'? (Y/n) "
             )
 
             if do_move.lower().startswith("y"):
@@ -134,13 +134,12 @@ class Choam:
             return
 
         template = {
-            f"{directory}{FOLDER_SEPERATOR}{name}{FOLDER_SEPERATOR}__main__.py": "",
-            f"{directory}{FOLDER_SEPERATOR}{name}{FOLDER_SEPERATOR}__init__.py": "__version__ == '0.1'",
-            f"{directory}{FOLDER_SEPERATOR}Choam.toml": f'[package]\nname = "{name}\nversion = "0.0.1"\ndescription = ""\n\n[modules-ignore]\n\n[modules]',
-            f"{directory}{FOLDER_SEPERATOR}README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
-            f"{directory}{FOLDER_SEPERATOR}.gitignore": gitignore,
-            f"{directory}{FOLDER_SEPERATOR}setup.py": "",
-            f"{directory}{FOLDER_SEPERATOR}setup.cfg": "# Custom configurations go here",
+            f"{FOLDER_SEPERATOR}{name}{FOLDER_SEPERATOR}__main__.py": "",
+            f"{FOLDER_SEPERATOR}{name}{FOLDER_SEPERATOR}__init__.py": "__version__ == '0.1'",
+            f"{FOLDER_SEPERATOR}Choam.toml": f'[package]\nname = "{name}\nversion = "0.0.1"\ndescription = ""\n\n[modules-ignore]\n\n[modules]',
+            f"{FOLDER_SEPERATOR}README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
+            f"{FOLDER_SEPERATOR}.gitignore": gitignore,
+            f"{FOLDER_SEPERATOR}setup.py": "",
         }
 
         FS.construct_from_dict(template, directory)
@@ -185,18 +184,23 @@ class Choam:
         template = {
             f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}__main__.py": "",
             f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}__init__.py": "__version__ == '0.1'",
-            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}Choam.toml": f'[package]\nname = "{name}"\nversion = "0.0.1"\ndescription = ""\n\n[modules]\nchoam = "*"',
+            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}Choam.toml": f'[package]\nname = "{name}"\nversion = "0.0.1"\ndescription = ""\n\n[modules]',
             f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}README.md": f"# {name}\n#### This project was constructed with [Choam](https://github.com/cowboycodr/choam)",
             f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}.gitignore": gitignore,
             f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}setup.py": "",
-            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}setup.cfg": "# Custom configurations go here",
         }
 
         FS.construct_from_dict(template, directory)
 
-    def run(self, path_or_script: str, file: Optional[bool] = None, enable_script_variables: Optional[bool] = True, *args):
+    def run(
+        self,
+        path_or_script: str,
+        file: Optional[bool] = None,
+        enable_script_variables: Optional[bool] = True,
+        *args,
+    ):
         """
-        Run a `Choam` script defined in `Choam.toml` or run project's default entry 
+        Run a `Choam` script defined in `Choam.toml` or run project's default entry
         point or specify a relative filepath for Choam to run.
 
         :path_or_script: specific filepath or script for `Choam` to run (default is script)
@@ -207,7 +211,7 @@ class Choam:
             return
 
         config = Choam._get_config()
-        project_folder = config['package']['name'].lower()
+        project_folder = config["package"]["name"].lower()
 
         if file:
             path = path_or_script
@@ -226,21 +230,47 @@ class Choam:
 
         script = path_or_script
         current_dir = os.getcwd()
-        perspective_folder = os.path.abspath(os.path.join(current_dir, config['script'][script]['perspective']))
-        command = config['script'][script]['command']
 
         script_variables = {
             "PYTHON": PYTHON_INTERPRETER,
-            "CWD": current_dir
+            "CWD": current_dir,
+            "PROJECT": FS.get_project_name(),
         }
+
+        if "perspective" in config["script"][script].keys():
+            perspective = config["script"][script]["perspective"]
+        else:
+            perspective = os.getcwd()
+
+        if "requires" in config["script"][script].keys():
+            requires = config["script"][script]["requires"]
+        else:
+            requires = []
+
+        if "command" not in config["script"][script].keys():
+            Choam._log(f"{script}: is missing required command parameter")
+            return
+
+        command = config["script"][script]["command"]
 
         if enable_script_variables:
             for var_name in script_variables.keys():
-                command = command.replace("${" + var_name + "}", script_variables[var_name])
+                var_replacement = "${" + var_name + "}"
+                script_variable = script_variables[var_name]
 
-        Choam._log(command)
+                command = command.replace(var_replacement, script_variable)
+                perspective = perspective.replace(
+                    var_replacement, script_variables[var_name]
+                )
 
-        os.system(f"cd {perspective_folder} && {command}")
+        for req in requires:
+            self.install(req)
+
+        perspective = os.path.abspath(perspective)
+
+        Choam._log(f"({perspective}) : {command}")
+
+        os.system(f"cd {perspective} && {command}")
 
     def _init_setup(self):
         directory = os.getcwd()
@@ -358,7 +388,7 @@ class Choam:
         if install:
             self.install(find_dependencies=False)
 
-    def install(self, dep: Optional[str] = None, find_deps: Optional[bool] = None):
+    def install(self, dep: Optional[str] = None):
         """
         Install all required dependencies from `Choam.toml`
         modules section.
@@ -372,9 +402,6 @@ class Choam:
 
         if dep:
             self.add(dep)
-
-        if find_deps:
-            self.deps()
 
         config = Choam._get_config()
 
@@ -462,7 +489,9 @@ class Choam:
         directory = os.getcwd()
         path = f"requirements.txt"
 
-        pip_versions_proc = subprocess.Popen([PYTHON_INTERPRETER, "-m", "pip", "freeze"], stdout=subprocess.PIPE)
+        pip_versions_proc = subprocess.Popen(
+            [PYTHON_INTERPRETER, "-m", "pip", "freeze"], stdout=subprocess.PIPE
+        )
         pip_versions_string = str(pip_versions_proc.communicate()[0])
         pip_versions = {}
 
@@ -478,10 +507,10 @@ class Choam:
 
             pip_versions[mod_name] = mod_ver
 
-        requirements_content = ''
-        for mod in config['modules']:
+        requirements_content = ""
+        for mod in config["modules"]:
             mod_name = mod
-            mod_ver = config['modules'][mod_name]
+            mod_ver = config["modules"][mod_name]
 
             if mod_ver == "*":
                 try:
@@ -489,14 +518,14 @@ class Choam:
                 except:
                     continue
 
-            requirements_content += f'{mod_name}=={mod_ver}\n'
+            requirements_content += f"{mod_name}=={mod_ver}\n"
 
-        template = {
-            path: requirements_content
-        }
+        template = {path: requirements_content}
 
         if os.path.exists(path):
-            Choam._log(f"{path}: Already exists. Either delete or rewrite requirements accordingly.")
+            Choam._log(
+                f"{path}: Already exists. Either delete or rewrite requirements accordingly."
+            )
 
         FS.construct_from_dict(template, directory)
 

@@ -73,3 +73,13 @@ class FolderStructure:
                 continue
 
             FolderStructure._create_file(path, content)
+
+    @staticmethod
+    def get_project_name():
+        """
+        Get the current project name
+
+        Useful for choam script variables
+        """
+
+        return os.getcwd().split(FOLDER_SEPERATOR)[-1]

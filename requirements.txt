@@ -5,3 +5,4 @@ typing==3.7.4.3
 importlib==1.0.4
 findimports==2.2.0
 autoapi==2.0.1
+black==21.7b0
