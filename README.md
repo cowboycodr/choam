@@ -8,7 +8,10 @@ Python enviroment manager based around making depedency management, and publicat
 
 While Python is a simple langauge all-around, managing dependencies and publication aren't. However, Choam automates this, with easy configuration, and simple commands.
 
-Choam, automating the nooks and crannies of Python. 
+> Choam, automating the nooks and crannies of Python. 
+
+## Warning
+Choam is currently in beta. If you are not comfortable with this, then use a different dependency manager in the meantime like `poetry`
 
 ## Installation
 `$ pip install choam`
@@ -46,5 +49,82 @@ The most useful snippets of `Choam`
 #### Run project entrypoint
 `$ choam run <filepath_or_script> <optional: --file (to run files instead of scripts)>`
 ___
+
+## `Choam.toml` quick start
+```toml
+# Choam.toml
+[package]
+name = "choam"
+version = "0.0.0"
+description = "Choam is a project manager"
+repo = "https://github.com/cowboycodr/choam"
+keywords = ["manager"]
+```
+
+So far we've described the package metadata. Including the package name, version, description, and other useful information. This will all be setup when you setup the project with Choam.
+
+### Managing dependencies
+Managing dependencies with Choam is just as easy as defining the package metadata.
+```toml
+# Choam.toml
+[package]
+...
+
+[modules]
+choam = "*"
+```
+
+The `*` means it will require the lastest version of the specified module. You can sepcify specific versions if you like: `choam = "0.1.18""`
+___
+Since Choam is in beta, it will sometimes capture unwanted depedencies. To by-pass this behavior define a `[modules-ignore]` section. Like so:
+```toml
+# Choam.toml
+[package]
+...
+
+[modules]
+...
+
+[modules-ignore]
+shutil = "*"
+```
+`toml` is a weird configuration langauge so make sure to include the ` = "*"` after the specified package.
+___
+
+### Choam's scripts
+
+To add custom defined scripts to your project all that is required is `[script.<YOUR_SCRIPT_NAME>]` and a few other parameters. Let's make a format script with python's black, for example.
+```toml
+# Choam.toml
+[package]
+...
+
+[modules]
+...
+
+[modules-ignore]
+...
+
+[script.format]
+requires = ["black"]
+perspective = "${PROJECT}"
+command = "${PYTHON} -m black ."
+```
+
+The `requires` section defines what dependencies are used with the script.
+
+The `perspective` parameter defines where the script will run relative to the project folder. The `${PROJECT}` will run in the project files directory instead of the overall project folder where the `Choam.toml`, `README.md` etc. are. 
+
+> Note: notice how `${PROJECT}` is used? When a piece of text is wrapped like `${}` this means it is a script variable. Choam provides multiple script variables such as `${PYTHON}` to access the active python interpreter, `${CWD}` to access the current directory, and `${PROJECT}` which is the current working directory. With these script variables you can create very useful scripts that work on any machine.
+
+The `perspective` parameter defines the actual command that will be run.
+
+Combining all of these with script variables you can create dynmaic, cross-platform, useful, scripts available to anyone.
+
+Running the script:
+
+`$ choam run format`
+
+In result this will format all of your project files`
 
 ### This project is structured with [Choam](https://github.com/cowboycodr/choam)
