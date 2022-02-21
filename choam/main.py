@@ -195,6 +195,7 @@ class Choam:
     def run(
         self,
         path_or_script: str,
+        description: Optional[bool] = None,
         file: Optional[bool] = None,
         enable_script_variables: Optional[bool] = True,
         *args,
@@ -236,6 +237,14 @@ class Choam:
             "CWD": current_dir,
             "PROJECT": FS.get_project_name(),
         }
+
+        if description:
+            if "description" in config["script"][script].keys():
+                Choam._log(config["script"][script]["description"])
+            else:
+                Choam._log(f"No description provided for {script}")
+
+            return
 
         if "perspective" in config["script"][script].keys():
             perspective = config["script"][script]["perspective"]

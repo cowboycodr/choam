@@ -26,6 +26,7 @@ perspective = "."
 command = "${PYTHON} -m pip install -r ${CWD}/requirements.txt"
 
 [script.fmt]
+description = "Format project files with `black`"
 requires = [ "black",]
 perspective = "${PROJECT}"
 command = "${PYTHON} -m black ."
