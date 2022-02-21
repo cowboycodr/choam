@@ -11,7 +11,7 @@ While Python is a simple langauge all-around, managing dependencies and publicat
 > Choam, automating the nooks and crannies of Python. 
 
 ## Warning
-Choam is currently in beta. If you are not comfortable with this, then use a different dependency manager in the meantime like `poetry`
+Choam is currently in beta. If you are not comfortable with this, then use a different dependency manager in the meantime like `poetry`.
 
 ## Installation
 `$ pip install choam`

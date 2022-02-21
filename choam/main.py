@@ -32,6 +32,16 @@ class Choam:
         with open(f"{os.getcwd()}/Choam.toml", "w") as f:
             f.write(str(content))
 
+    def is_config_section(self, section_name: str) -> bool:
+        if section_name in Choam._get_config().keys():
+            return True
+
+    def _add_config_section(self, section_name: str):
+        new_config = Choam._get_config()
+        new_config[section_name] = ""
+
+        Choam._set_config(toml.dumps(new_config))
+
     def _log(message: str):
         print(f"\n\t{message}")
 
@@ -273,7 +283,7 @@ class Choam:
                 )
 
         for req in requires:
-            self.install(req)
+            self.add(dependency_name=req, install=True, dev=True)
 
         perspective = os.path.abspath(perspective)
 
@@ -374,6 +384,7 @@ class Choam:
         self,
         dependency_name: str,
         install: Optional[bool] = None,
+        dev: Optional[bool] = None,
         ignore: Optional[bool] = None,
     ):
         """
@@ -384,18 +395,30 @@ class Choam:
 
         if ignore:
             config["modules-ignore"][dependency_name] = "*"
-            config["modules"].pop(dependency_name)
+
+            if dependency_name in config["modules"].keys():
+                config["modules"].pop(dependency_name)
 
             Choam._set_config(toml.dumps(config))
 
             return
 
-        config["modules"][dependency_name] = "*"
+        if dev:
+            if not self.is_config_section("modules-dev"):
+                config["modules-dev"] = {}
+
+            config["modules-dev"][dependency_name] = "*"
+
+            if dependency_name in config["modules"]:
+                config["modules"].pop(dependency_name)
+
+        else:
+            config["modules"][dependency_name] = "*"
 
         Choam._set_config(toml.dumps(config))
 
         if install:
-            self.install(find_dependencies=False)
+            self.install()
 
     def install(self, dep: Optional[str] = None):
         """
@@ -414,7 +437,12 @@ class Choam:
 
         config = Choam._get_config()
 
-        required_mods = {mod for mod in config["modules"]}
+        if not self.is_config_section("modules-dev"):
+            config["modules-dev"] = {}
+
+        modules = {**config["modules"], **config["modules-dev"]}
+
+        required_mods = {mod for mod in modules}
         installed_mods = {mod.key for mod in pkg_resources.working_set}
         missing_mods = required_mods - installed_mods
 

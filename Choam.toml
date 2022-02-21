@@ -19,6 +19,8 @@ typing = "*"
 importlib = "*"
 findimports = "*"
 autoapi = "*"
+
+[modules-dev]
 black = "*"
 
 [script.install-reqs]
