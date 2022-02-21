@@ -16,7 +16,7 @@ Choam, automating the nooks and crannies of Python.
 ## Snippets
 The most useful snippets of `Choam`
 
-> Note: Dependeing on your OS, Choam might have to be prefixed with `$ python3 -m` like this, `$ python3 -m choam <command>` 
+> Note: Depending on your system's configurations, Choam might have to be prefixed with `$ python3 -m` like this, `$ python3 -m choam <COMMAND>` 
 
 #### To create a new project
 
@@ -34,7 +34,7 @@ The most useful snippets of `Choam`
 #### Find all required dependencies and update `Choam.toml` accordingly
 `$ choam deps`
 
-### Convert `Choam.toml` requirements to `requirements.txt`
+#### Convert `Choam.toml` requirements to `requirements.txt`
 `$ choam reqs`
 
 #### Setup config files for publication to PyPi according to `Choam.toml`
@@ -44,7 +44,7 @@ The most useful snippets of `Choam`
 `$ choam publish`
 
 #### Run project entrypoint
-`$ choam run <optional:relative_path>`
+`$ choam run <filepath_or_script> <optional: --file (to run files instead of scripts)>`
 ___
 
 ### This project is structured with [Choam](https://github.com/cowboycodr/choam)
