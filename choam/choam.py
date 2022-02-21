@@ -32,7 +32,7 @@ class Choam:
         with open(f"{os.getcwd()}/Choam.toml", "w") as f:
             f.write(str(content))
 
-    def is_config_section(self, section_name: str) -> bool:
+    def _is_config_section(self, section_name: str) -> bool:
         if section_name in Choam._get_config().keys():
             return True
 
@@ -57,13 +57,18 @@ class Choam:
             print()
 
     def config(self, key: str, *values):
+        config = Choam._get_config()
+
         if len(values) == 0:
+            if key in config['package'].keys():
+                value = config['package'][key]
+
+                Choam._log(f"{key}: {value}")
+
             return
 
-        if len(values) == 1:
+        elif len(values) == 1:
             values = values[0]
-
-        config = Choam._get_config()
 
         config["package"][key] = values
 
@@ -404,7 +409,7 @@ class Choam:
             return
 
         if dev:
-            if not self.is_config_section("modules-dev"):
+            if not self._is_config_section("modules-dev"):
                 config["modules-dev"] = {}
 
             config["modules-dev"][dependency_name] = "*"
@@ -437,7 +442,7 @@ class Choam:
 
         config = Choam._get_config()
 
-        if not self.is_config_section("modules-dev"):
+        if not self._is_config_section("modules-dev"):
             config["modules-dev"] = {}
 
         modules = {**config["modules"], **config["modules-dev"]}
@@ -470,7 +475,7 @@ class Choam:
 
     def publish(self):
         """
-        Publish package to https://PyPi.org following `_file_name.py` and `setup.cfg`
+        Publish package to https://PyPi.org following `Choam.toml` and `setup.py`
         configurations
 
         > Note: this method requires your https://PyPi.org credentials for twine
@@ -569,3 +574,6 @@ class Choam:
 
 def main():
     fire.Fire(Choam())
+
+if __name__ == "__main__":
+    main()

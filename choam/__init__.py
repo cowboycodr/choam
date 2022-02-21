@@ -1,1 +1,1 @@
-from choam.main import main
+from choam.choam import main
