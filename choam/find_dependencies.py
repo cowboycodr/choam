@@ -18,7 +18,7 @@ def _find_dependencies(project_path: Path, project_name):
     all of the project files.
     """
 
-    ignore_deps = ["os", "sys", "subprocess", "pkg_resources", "choam"]
+    ignore_deps = ["os", "sys", "subprocess", "pkg_resources", "choam", "importlib", "pathlib"]
 
     import_info = set()
 

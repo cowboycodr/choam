@@ -451,14 +451,11 @@ class Choam:
         installed_mods = {mod.key for mod in pkg_resources.working_set}
         missing_mods = required_mods - installed_mods
 
-        # Key: Module name, Value: Module version
-        mod_ver = config["modules"]
-
         for mod in missing_mods:
             Choam._log(f"Installing {mod}")
 
             module_string = (
-                f"{mod}=={mod_ver[mod]}" if mod_ver[mod] != "*" else f"{mod}--upgrade"
+                f"{mod}=={modules[mod]}" if modules[mod] != "*" else f"{mod}--upgrade"
             )
             upgrade_module = module_string.endswith("--upgrade")
 
