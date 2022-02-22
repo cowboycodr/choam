@@ -26,7 +26,7 @@ The most useful snippets of `Choam`
 `$ choam new <project_name>`
 
 #### To initialize a project in the current directory
-`$ choam init <project_name>`
+`$ choam init
 
 #### Add required dependency
 `$ choam add <dependency_name>`
@@ -125,6 +125,6 @@ Running the script:
 
 `$ choam run format`
 
-In result this will format all of your project files`
+In result this will format all of your project files
 
 ### This project is structured with [Choam](https://github.com/cowboycodr/choam)
