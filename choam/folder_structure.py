@@ -1,5 +1,8 @@
+'''
+Choam's folder structure manager
+'''
+
 import os
-from statistics import mode
 
 from choam.constants import FOLDER_SEPERATOR
 
@@ -21,23 +24,24 @@ class FolderStructure:
             _dir = os.getcwd()
 
         if not os.path.exists(_dir):
-            return
+            return False
 
         return "Choam.toml" in os.listdir(os.path.abspath(_dir))
 
-    def is_publishable(_dir: "str | None" = None):
+    @staticmethod
+    def is_publishable(directory: "str | None" = None) -> bool:
         """'
         Returns True if the directory fits
         Choam's publication requirements
         """
 
-        if not _dir:
-            _dir = os.getcwd()
+        if not directory:
+            directory = os.getcwd()
 
-        if not os.path.exists(_dir):
-            return
+        if not os.path.exists(directory):
+            return False
 
-        return "setup.py" in os.listdir(os.path.abspath(_dir))
+        return "setup.py" in os.listdir(os.path.abspath(directory))
 
     @staticmethod
     def _create_file(filepath: str, content: "str | None") -> str:
@@ -49,11 +53,11 @@ class FolderStructure:
         if not os.path.exists(folder_path):
             try:
                 os.makedirs(folder_path)
-            except:
+            except OSError:
                 pass
 
         if not os.path.exists(filepath):
-            with open(filepath, "w") as file:
+            with open(filepath, "w", encoding="utf-8") as file:
                 file.write(content if content else "")
 
         return filepath

@@ -1,10 +1,15 @@
+'''
+find_dependencies finds project dependencies
+and adds them to Choam.tomls
+'''
+
+import importlib
 import os
 import sys
-import importlib
 from pathlib import Path
 
-import toml
 import findimports
+import toml
 
 
 def _find_dependencies(project_path: Path, project_name):
@@ -32,8 +37,8 @@ def _find_dependencies(project_path: Path, project_name):
 
     files = Path(Path(project_path / project_name).absolute()).rglob("*.py")
 
-    for f in files:
-        import_info.update(findimports.find_imports(str(f)))
+    for file_name in files:
+        import_info.update(findimports.find_imports(str(file_name)))
 
     dependencies = set()
 
@@ -64,8 +69,8 @@ def find_dependencies():
     """
 
     project_path = Path(os.getcwd()).absolute()
-    with open(f"{os.getcwd()}/Choam.toml", "r") as f:
-        config = toml.loads(f.read())
+    with open(f"{os.getcwd()}/Choam.toml", "r", encoding="utf-8") as file:
+        config = toml.loads(file.read())
 
         project_name = config["package"]["name"]
         ignored_deps = config["modules-ignore"]

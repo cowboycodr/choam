@@ -1,7 +1,12 @@
-import os
+'''
+Choam's constant variables
+
+Mostly used for dynamic script configurations
+in Choam.toml
+'''
+
 import sys
 import platform
-from pathlib import Path
 
 # system details
 OPERATING_SYSTEM = platform.system().lower()

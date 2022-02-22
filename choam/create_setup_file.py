@@ -1,5 +1,6 @@
-import os
-import pathlib
+'''
+create_setup_file used for initializing setup configurations
+'''
 
 from choam.find_dependencies import find_dependencies
 
@@ -8,7 +9,6 @@ def create_setup_file(
     name: str,
     version: str,
     description: str,
-    keywords: "list[str]",
     dependencies: "list",
     repo_url: str,
 ):
@@ -35,13 +35,12 @@ def create_setup_file(
             "config = read_configurations('setup.cfg')",
             "",
             "setup(",
-            f"    **config,",
+            "    **config,",
             f'    name="{name}",',
             f'    version="{version}",',
             f'    description="{description}",',
-            f"    packages=find_packages(),",
-            f"    keywords={keywords},",
-            f"    install_requires={[dep for dep in dependencies]},",
+            "    packages=find_packages(),",
+            f"    install_requires={dependencies},",
             "    project_urls={",
             f"        'Source': '{repo_url}'",
             "    },",

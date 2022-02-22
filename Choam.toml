@@ -3,7 +3,6 @@ name = "Choam"
 version = "0.1.25"
 description = "Python project scaffolder/manager"
 repo = "https://github.com/cowboycodr/choam"
-keywords = [ "package", "manager",]
 
 [modules-ignore]
 shutil = "*"
@@ -23,6 +22,7 @@ findimports = "*"
 [modules-dev]
 black = "*"
 requests = "*"
+pylint = "*"
 
 [script.install-reqs]
 perspective = "."
@@ -39,3 +39,9 @@ description = "Prints a motivational quote from zenquotes.io"
 requires = [ "requests",]
 perspective = ".choam${SEP}scripts${SEP}motivation"
 command = "${PYTHON} get_quote.py"
+
+[script.lint]
+description = "Lint Project files with PyLint"
+requires = [ "pylint",]
+perspective = "."
+command = "${PYTHON} -m pylint ${PROJECT}"
