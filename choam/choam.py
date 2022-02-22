@@ -79,6 +79,8 @@ class Choam:
         Adapt an existing project directory to Choam's structure
         """
 
+        project_name = FS.get_project_name()
+
         PROJECT_FILES = [
             "requirements.txt",
             ".gitignore",
@@ -87,6 +89,8 @@ class Choam:
             "setup.py",
             "LICENSE.txt",
             ".git",
+            ".choam",
+            project_name,
         ]
 
         for f in os.listdir(directory):
@@ -210,8 +214,10 @@ class Choam:
     def run(
         self,
         path_or_script: str,
-        description: Optional[bool] = None,
         file: Optional[bool] = None,
+        description: Optional[bool] = None,
+        command: Optional[bool] = None,
+        perspective: Optional[bool] = None,
         enable_script_variables: Optional[bool] = True,
         *args,
     ):
@@ -219,8 +225,16 @@ class Choam:
         Run a `Choam` script defined in `Choam.toml` or run project's default entry
         point or specify a relative filepath for Choam to run.
 
-        :path_or_script: specific filepath or script for `Choam` to run (default is script)
+        Args:
+            :path_or_script: specific filepath or script for `Choam` to run (default is script)
+
+            :description: prints out the provided description of the command if there is one
+
+            :command: prints out the command that will be run without actually running it
         """
+
+        log_command = command
+        log_perspective = perspective
 
         if not FS.is_choam_project():
             Choam._log("Not a Choam project.")
@@ -251,11 +265,12 @@ class Choam:
             "PYTHON": PYTHON_INTERPRETER,
             "CWD": current_dir,
             "PROJECT": FS.get_project_name(),
+            "SEP": FOLDER_SEPERATOR
         }
 
         if description:
             if "description" in config["script"][script].keys():
-                Choam._log(config["script"][script]["description"])
+                Choam._log(script + ": " + config["script"][script]["description"])
             else:
                 Choam._log(f"No description provided for {script}")
 
@@ -287,10 +302,20 @@ class Choam:
                     var_replacement, script_variables[var_name]
                 )
 
+        perspective = os.path.abspath(perspective)
+
+        if log_command:
+            Choam._log(f"command: {command}")
+
+            return
+
+        elif log_perspective:
+            Choam._log(f"perspective: {perspective}")
+
+            return
+
         for req in requires:
             self.add(dependency_name=req, install=True, dev=True)
-
-        perspective = os.path.abspath(perspective)
 
         Choam._log(f"({perspective}) : {command}")
 

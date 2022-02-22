@@ -32,3 +32,8 @@ description = "Format project files with `black`"
 requires = [ "black",]
 perspective = "${PROJECT}"
 command = "${PYTHON} -m black ."
+
+[script.motivation]
+description = "Prints a motivational quote retrieved with cURL"
+perspective = ".choam${SEP}scripts${SEP}motivation"
+command = "${PYTHON} get_quote.py"

@@ -8,18 +8,5 @@ OPERATING_SYSTEM = platform.system().lower()
 PYTHON_INTERPRETER: str = sys.executable
 
 # configurations
-FOLDER_SEPERATOR: str
-SETUP_FILE_NAME: str
-
-# Processing platform specific configurations
-if OPERATING_SYSTEM == "windows":
-    FOLDER_SEPERATOR = "\\"
-    SETUP_FILE_NAME = "setup"
-
-    # PYTHON_INTERPRETER = os.popen("where python3").read().split("\n")[0]
-
-else:
-    FOLDER_SEPERATOR = "/"
-    SETUP_FILE_NAME = "setup.py"
-
-    # PYTHON_INTERPRETER = os.popen("which python3").read().split("\n")[0]
+FOLDER_SEPERATOR: str = "\\" if platform.system().lower() == "windows" else "/"
+SETUP_FILE_NAME: str = "setup.py"

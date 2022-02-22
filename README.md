@@ -127,4 +127,8 @@ Running the script:
 
 In result this will format all of your project files
 
+## `.choam` folder
+
+The `.choam` folder is specifically for storing Choam related resources. For example: if you have a choam script, and you need to pull from a file, for example. You would put the resource in `.choam/scripts/<SCRIPT_NAME>/<FILE>`
+
 ### This project is structured with [Choam](https://github.com/cowboycodr/choam)
