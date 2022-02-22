@@ -26,7 +26,7 @@ The most useful snippets of `Choam`
 `$ choam new <project_name>`
 
 #### To initialize a project in the current directory
-`$ choam init
+`$ choam init <optional: --adapt (adapts the current project to choam's standards)>`
 
 #### Add required dependency
 `$ choam add <dependency_name>`
