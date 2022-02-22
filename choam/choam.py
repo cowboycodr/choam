@@ -60,8 +60,8 @@ class Choam:
         config = Choam._get_config()
 
         if len(values) == 0:
-            if key in config['package'].keys():
-                value = config['package'][key]
+            if key in config["package"].keys():
+                value = config["package"][key]
 
                 Choam._log(f"{key}: {value}")
 
@@ -265,7 +265,7 @@ class Choam:
             "PYTHON": PYTHON_INTERPRETER,
             "CWD": current_dir,
             "PROJECT": FS.get_project_name(),
-            "SEP": FOLDER_SEPERATOR
+            "SEP": FOLDER_SEPERATOR,
         }
 
         if description:
@@ -596,6 +596,7 @@ class Choam:
 
 def main():
     fire.Fire(Choam())
+
 
 if __name__ == "__main__":
     main()
