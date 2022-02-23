@@ -48,7 +48,7 @@ perspective = "."
 command = "${PYTHON} -m pylint ${PROJECT}"
 
 [script.downloads]
-description = "Get choam downloads // python must be on path"
-perspective = ".choam${SEP}scripts${SEP}downloads"
+description = "Get choam downloads"
+perspective = ".choam${SEP}scripts${SEP}choam_downloads"
 requires = [ "rich",]
 command = "${PYTHON} get_downloads.py"
