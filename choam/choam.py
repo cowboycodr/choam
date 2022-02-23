@@ -284,7 +284,7 @@ class Choam:
         elif perspective:
             self._log(perspective_value)
 
-    def run(
+    def script(
         self,
         path_or_script: str = "",
         is_file: Optional[bool] = None,
@@ -292,6 +292,7 @@ class Choam:
         command: Optional[bool] = None,
         perspective: Optional[bool] = None,
         enable_script_variables: Optional[bool] = True,
+        download: Optional[bool] = None,
         *args
     ):
         """

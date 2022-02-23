@@ -1,6 +1,6 @@
 [package]
 name = "Choam"
-version = "0.1.25"
+version = "1.0.1"
 description = "Python project scaffolder/manager"
 repo = "https://github.com/cowboycodr/choam"
 
@@ -23,6 +23,7 @@ findimports = "*"
 black = "*"
 requests = "*"
 pylint = "*"
+rich = "*"
 
 [script.install-reqs]
 perspective = "."
@@ -45,3 +46,9 @@ description = "Lint Project files with PyLint"
 requires = [ "pylint",]
 perspective = "."
 command = "${PYTHON} -m pylint ${PROJECT}"
+
+[script.downloads]
+description = "Get choam downloads // python must be on path"
+perspective = ".choam${SEP}scripts${SEP}downloads"
+requires = [ "rich",]
+command = "${PYTHON} get_downloads.py"
