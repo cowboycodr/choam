@@ -1,6 +1,5 @@
 import os
 
-from choam.choam import Choam
 from choam.config_manager import ConfigManager
 from choam.folder_structure import FolderStructure as FS
 
@@ -10,7 +9,7 @@ class Command:
     '''
     def __init__(
         self,
-        ctx: Choam,
+        ctx,
     ):
         self.ctx = ctx
         self.config = ConfigManager()

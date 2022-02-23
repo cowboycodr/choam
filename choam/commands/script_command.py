@@ -41,7 +41,7 @@ class ScriptCommand(Command):
         config = self.config.get()
 
         self.ctx._require_choam()
-        if self.describe(**kwargs): return
+        if self.describe(path_or_script, **kwargs): return
 
         if "is_file" in kwargs.keys() or args:
             path = path_or_script
