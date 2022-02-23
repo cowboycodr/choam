@@ -21,7 +21,7 @@ class InstallCommand(Command):
         self,
         choam,
     ):
-        super(InstallCommand, self).__init__(ctx=choam)
+        super().__init__(ctx=choam)
 
     def run(self, dep: Optional[str]):
         """

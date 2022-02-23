@@ -14,7 +14,6 @@ from typing import Optional
 import fire
 
 from choam.commands import *
-from choam.config_manager import ConfigManager
 from choam.constants import OPERATING_SYSTEM
 from choam.folder_structure import FolderStructure as FS
 
@@ -22,11 +21,11 @@ from choam.folder_structure import FolderStructure as FS
 class Choam:
     """
     Choam is a Python project manager designed for
-    maanging dependencies, configurations and more.
+    managing dependencies, configurations and more.
     """
 
     def __init__(self):
-        self.configurations = ConfigManager()
+        self._messenger = Messanger()
 
     def _require_choam(self):
         if not FS.is_choam_project():
