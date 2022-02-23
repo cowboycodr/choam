@@ -9,6 +9,7 @@ Choam is a python project manager with the following capabilities:
 '''
 
 import os
+import sys
 import shutil
 import subprocess
 from typing import Optional
@@ -17,12 +18,14 @@ import fire
 import pkg_resources
 import toml
 
+from choam.commands import *
 from choam.constants import (FOLDER_SEPERATOR, OPERATING_SYSTEM,
                              PYTHON_INTERPRETER, SETUP_FILE_NAME)
 from choam.create_setup_file import create_setup_file
 from choam.find_dependencies import find_dependencies
 from choam.folder_structure import FolderStructure as FS
 from choam.gitignore import GITIGNORE
+from choam.config_manager import ConfigManager
 
 
 PROJECT_NAME = FS.get_project_name()
@@ -34,27 +37,24 @@ class Choam:
     '''
 
     def __init__(self):
-        pass
+        self.configurations = ConfigManager()
 
-    def _get_config(self):
-        with open(f"{os.getcwd()}/Choam.toml", "r", encoding="utf-8") as file:
-            return toml.loads(file.read())
-
-    def _set_config(self, content: str):
-        with open(f"{os.getcwd()}/Choam.toml", "w", encoding="utf-8") as file:
-            file.write(str(content))
+    def _require_choam(self):
+        if not FS.is_choam_project():
+            Choam._log("Must be a choam project.")
+            sys.exit()
 
     def _is_config_section(self, section_name: str) -> bool:
-        if section_name in self._get_config().keys():
+        if section_name in self.configurations.get().keys():
             return True
 
         return False
 
     def _add_config_section(self, section_name: str):
-        new_config = self._get_config()
+        new_config = self.configurations.get()
         new_config[section_name] = ""
 
-        self._set_config(toml.dumps(new_config))
+        self.configirations.set(new_config)
 
     def _log(self, message: str):
         print(f"\n\t{message}")
@@ -72,199 +72,32 @@ class Choam:
 
     def config(self, key: str, *values):
         '''
-        Choam configuration command-line-interface
-        function
+        Choam's config command for reading/managing
+        configurations from the command-line using Choam
         '''
-
-        config = self._get_config()
-
-        if len(values) == 0:
-            if key in config["package"].keys():
-                value = config["package"][key]
-
-                self._log(f"{key}: {value}")
-
-            return
-
-        if len(values) == 1:
-            values = values[0]
-
-        config["package"][key] = values
-
-        self._set_config(toml.dumps(config))
-
-    def _adapt(self, directory: str, name: str):
-        """
-        Adapt an existing project directory to Choam's structure
-        """
-
-        project_name = FS.get_project_name()
-
-        project_files = [
-            "requirements.txt",
-            ".gitignore",
-            "README.md",
-            "README",
-            "setup.py",
-            "LICENSE.txt",
-            ".git",
-            ".choam",
-            project_name,
-        ]
-
-        for file in os.listdir(directory):
-            file_name = file.split(FOLDER_SEPERATOR)[-1]
-            dest = (
-                os.path.abspath(
-                    FOLDER_SEPERATOR.join(file.split(FOLDER_SEPERATOR)[:-1])
-                    + FOLDER_SEPERATOR
-                    + name
-                    + FOLDER_SEPERATOR
-                    + file.split(FOLDER_SEPERATOR)[-1]
-                )
-                .replace(FOLDER_SEPERATOR, "", 1)
-                .replace(file_name, "", 1)
-            )
-
-            if file_name in project_files:
-                continue
-
-            try:
-                os.makedirs(dest, mode=0o666, exist_ok=True)
-            except OSError:
-                pass
-
-            do_move = input(
-                f"Would you like to move: '{os.path.abspath(file_name)}'?"
-                " (Y/n) "
-            )
-
-            if do_move.lower().startswith("y"):
-                try:
-                    shutil.move(file, dest)
-                except FileNotFoundError:
-                    pass
-
-        template = {
-            f"{FOLDER_SEPERATOR}Choam.toml": (
-                f'[package]\nname="{name}"\nversion="0.0.0"\n'
-                f'description=""\nrepo="*required*"\nkeywords=[]'
-                f'\n\n[modules-ignore]\n\n[modules]'
-            ),
-            f"{FOLDER_SEPERATOR}README.md": (
-                f"{name}\n###This project was structure with"
-                " [Choam](https://github.com/cowboycodr/choam)"
-            ),
-            f"{FOLDER_SEPERATOR}.gitignore": GITIGNORE,
-        }
-
-        FS.construct_from_dict(template, directory)
-        self.deps()
+        ConfigCommand(self).run(key, values)
 
     def init(self, adapt: Optional[bool] = None):
-        """
-        Initalize a new Choam project in the working
+        '''
+        Choam's initialize command for initializing
+        a new Choam project inside the working 
         directory
-        """
-
-        directory = os.getcwd()
-        name = directory.split(FOLDER_SEPERATOR)[-1]
-
-        if FS.is_choam_project(directory):
-            self._log("Already a Choam project.")
-            return
-
-        if adapt:
-            self._adapt(directory, name)
-
-            return
-
-        template = {
-            f"{FOLDER_SEPERATOR}{name}{FOLDER_SEPERATOR}__main__.py": "",
-            f"{FOLDER_SEPERATOR}{name}{FOLDER_SEPERATOR}__init__.py": (
-                "__version__ == '0.1'"
-            ),
-            f"{FOLDER_SEPERATOR}Choam.toml": (
-                f'[package]\nname = "{name}"\nversion = "0.0.1"\ndescription ='
-                ' ""\n\n[modules-ignore]\n\n[modules]'
-            ),
-            f"{FOLDER_SEPERATOR}README.md": (
-                f"# {name}\n#### This project was constructed with"
-                " [Choam](https://github.com/cowboycodr/choam)"
-            ),
-            f"{FOLDER_SEPERATOR}.gitignore": GITIGNORE,
-            f"{FOLDER_SEPERATOR}setup.py": "",
-        }
-
-        FS.construct_from_dict(template, directory)
+        '''
+        InitCommand(self).run(adapt)
 
     def cleanup(self):
         """
-        Remove build directories discharged from `$ choam publish`
+        Remove build directories discharged from publication
+        & attempts
         """
-
-        project_name = FS.get_project_name()
-
-        build_directories = [
-            "build",
-            f"{project_name}.egg-info",
-            "dist",
-        ]
-
-        if project_name in build_directories:
-            self._log_multiple(
-                [
-                    "Cannot cleanup project that matches names with build"
-                    " directories list",
-                    f"{project_name} is a reserved directory name.",
-                ]
-            )
-            return
-
-        for dirname in build_directories:
-            path = f"{os.getcwd()}/{dirname}"
-
-            if not os.path.exists(path):
-                continue
-
-            shutil.rmtree(path)
+        CleanUpCommand(self).run()
 
     def new(self, name: str):
         """
-        Create a new directory and initalize a Choam project
-        inside of it
+        Initalize and generate a Choam project
+        inside of a new directory
         """
-
-        directory = os.getcwd()
-        folder_name = name.lower()
-
-        # Choam project template
-        template = {
-            (
-                f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}"
-                f"{folder_name}{FOLDER_SEPERATOR}__main__.py"
-            ): (
-                ""
-            ),
-            (
-                f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}"
-                f"{folder_name}{FOLDER_SEPERATOR}__init__.py"
-            ) : (
-                "__version__ == '0.1'"
-            ),
-            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}Choam.toml": (
-                f'[package]\nname = "{name}"\nversion = "0.0.1"\ndescription ='
-                ' ""\n\n[modules]'
-            ),
-            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}README.md": (
-                f"# {name}\n#### This project was constructed with"
-                " [Choam](https://github.com/cowboycodr/choam)"
-            ),
-            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}.gitignore": GITIGNORE,
-            f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}setup.py": "",
-        }
-
-        FS.construct_from_dict(template, directory)
+        NewCommand(self).run(name)
 
     def _log_run_script(
         self,
@@ -287,13 +120,8 @@ class Choam:
     def script(
         self,
         path_or_script: str = "",
-        is_file: Optional[bool] = None,
-        description: Optional[bool] = None,
-        command: Optional[bool] = None,
-        perspective: Optional[bool] = None,
-        enable_script_variables: Optional[bool] = True,
-        download: Optional[bool] = None,
-        *args
+        *args,
+        **kwargs
     ):
         """
         Run a `Choam` script defined in `Choam.toml` or run project's default entry
@@ -306,98 +134,16 @@ class Choam:
 
             :command: prints out the command that will be run without actually running it
         """
-
-        log_command = command
-        log_perspective = perspective
-
-        if not FS.is_choam_project():
-            self._log("Not a Choam project.")
-            return
-
-        config = self._get_config()
-
-        if is_file:
-            path = path_or_script
-
-            if not path:
-                subprocess.call(
-                    [
-                        PYTHON_INTERPRETER,
-                        "-m",
-                        PROJECT_NAME,
-                        *args,
-                    ]
-                )
-                return
-
-            subprocess.call(
-                [
-                    PYTHON_INTERPRETER,
-                    os.path.join(os.getcwd(), PROJECT_NAME, path),
-                ]
-            )
-            return
-
-        script = path_or_script
-        current_dir = os.getcwd()
-
-        script_variables = {
-            "PYTHON": PYTHON_INTERPRETER,
-            "CWD": current_dir,
-            "PROJECT": FS.get_project_name(),
-            "SEP": FOLDER_SEPERATOR,
-        }
-
-        if "perspective" in config["script"][script].keys():
-            perspective = config["script"][script]["perspective"]
-        else:
-            perspective = os.getcwd()
-
-        if "requires" in config["script"][script].keys():
-            requires = config["script"][script]["requires"]
-        else:
-            requires = []
-
-        if "command" not in config["script"][script].keys():
-            self._log(f"{script}: is missing required command parameter")
-            return
-
-        command = config["script"][script]["command"]
-
-        if enable_script_variables:
-            for name, value in script_variables.items():
-                var_replacement = "${" + name + "}"
-
-                command = command.replace(var_replacement, value)
-                perspective = perspective.replace(var_replacement, value)
-
-        perspective = os.path.abspath(perspective)
-
-        if description or log_command or log_perspective:
-            description_value = (None if "description" not in config["script"][script].keys() \
-                                else config["script"][script]["description"])
-
-            self._log_run_script(
-                description=description,
-                command=log_command,
-                perspective=log_perspective,
-                description_value=description_value,
-                command_value=command,
-                perspective_value=perspective
-            )
-
-            return
-
-        for req in requires:
-            self.add(dependency_name=req, install=True, dev=True)
-
-        self._log(f"({perspective}) : {command}")
-        os.system(f"cd {perspective} && {command}")
+        ScriptCommand(self).run(
+            path_or_script,
+            *args,
+            **kwargs,
+        )
 
     def _init_setup(self):
         directory = os.getcwd()
 
-        config = self._get_config()
+        config = self.configurations.get()
 
         package_config = config["package"]
         name = package_config["name"]
@@ -456,7 +202,7 @@ class Choam:
 
             return
 
-        config = self._get_config()
+        config = self.configurations.get()
         new_setup_file = ""
 
         # Rewrite with `Choam.toml` configurations
@@ -493,7 +239,7 @@ class Choam:
         Add a required depedency to the depdency list
         """
 
-        config = self._get_config()
+        config = self.configurations.get()
 
         if ignore:
             config["modules-ignore"][dependency_name] = "*"
@@ -501,7 +247,7 @@ class Choam:
             if dependency_name in config["modules"].keys():
                 config["modules"].pop(dependency_name)
 
-            self._set_config(toml.dumps(config))
+            self.configurations.set(config)
 
             return
 
@@ -517,7 +263,7 @@ class Choam:
         else:
             config["modules"][dependency_name] = "*"
 
-        self._set_config(toml.dumps(config))
+        self.configurations.set(config)
 
         if install:
             self.install()
@@ -537,7 +283,7 @@ class Choam:
         if dep:
             self.add(dep)
 
-        config = self._get_config()
+        config = self.configurations.get()
 
         if not self._is_config_section("modules-dev"):
             config["modules-dev"] = {}
@@ -620,7 +366,7 @@ class Choam:
         """
 
         dependencies = find_dependencies()
-        config = self._get_config()
+        config = self.configurations.get()
 
         for dep in config["modules-ignore"]:
             if dep in config["modules"].keys():
@@ -637,14 +383,14 @@ class Choam:
             key: dep_config[key] for key in sorted(dep_config, key=len)
         }
 
-        self._set_config(toml.dumps(config))
+        self.configurations.set(config)
 
     def reqs(self):
         """
         Convert `Choam.toml` to `requirements.txt` accordingly
         """
 
-        config = self._get_config()
+        config = self.configurations.get()
         directory = os.getcwd()
         path = "requirements.txt"
 
