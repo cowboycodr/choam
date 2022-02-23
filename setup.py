@@ -6,11 +6,11 @@ long_description = (directory / "README.md").read_text()
 
 setup(
     name="Choam",
-    version="1.0.0",
+	version="1.0.1",
     description="Python project scaffolder/manager",
     packages=["choam"],
     keywords=['package', 'manager'],
-    install_requires=['fire', 'toml', 'twine', 'wheel', 'choam', 'typing', 'autoapi', 'findimports'],
+	install_requires=['fire', 'toml', 'twine', 'wheel', 'choam', 'typing', 'autoapi', 'findimports'],
     project_urls={
         'Source': 'https://github.com/cowboycodr/choam'
     },
