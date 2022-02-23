@@ -1,12 +1,18 @@
+"""
+Generic command class for Choam's command-line-interface
+"""
+
 import os
 
 from choam.config_manager import ConfigManager
 from choam.folder_structure import FolderStructure as FS
 
+
 class Command:
-    '''
+    """
     Generic command class for Choam's command-line-interface
-    '''
+    """
+
     def __init__(
         self,
         ctx,
@@ -15,9 +21,9 @@ class Command:
         self.config = ConfigManager()
 
     def run(self):
-        '''
+        """
         Command code that will be executed goes here
-        '''
+        """
 
         pass
 

@@ -1,22 +1,24 @@
+"""
+Choam's command to add a depedency to required/dev/ignored
+modules in `Choam.toml`
+"""
+
 from choam.commands.command import Command
 
+
 class AddCommand(Command):
-    def __init__(
-        self,
-        choam
-    ):
+    def __init__(self, choam):
         super().__init__(ctx=choam)
 
     def run(
         self,
         dependency_name: str,
-        *args,
         **kwargs,
     ):
-        '''
+        """
         Add a dependecy to required/dev/ignored modules in
         `Choam.toml`
-        '''
+        """
 
         config = self.config.get()
 
@@ -41,6 +43,10 @@ class AddCommand(Command):
             self.ctx.install()
 
     def remove_from_modules(self, config: dict, module: str):
+        """
+        Remove module from modules list in `Choam.toml`
+        """
+
         result = config.copy()
 
         if module in result["modules"].keys():

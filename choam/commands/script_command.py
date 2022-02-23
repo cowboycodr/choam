@@ -1,22 +1,24 @@
+"""
+Choam's script command for running custom scripts
+and files
+"""
+
 import os
 import subprocess
 
-from choam.constants import PYTHON_INTERPRETER, FOLDER_SEPERATOR
-
 from choam.commands.command import Command
+from choam.constants import FOLDER_SEPERATOR, PYTHON_INTERPRETER
+
 
 class ScriptCommand(Command):
-    def __init__(
-        self,
-        choam
-    ):
+    def __init__(self, choam):
         super().__init__(ctx=choam)
 
         self.script_variables = {
             "PYTHON": PYTHON_INTERPRETER,
             "CWD": self.directory,
             "PROJECT": self.project_name,
-            "SEP": FOLDER_SEPERATOR
+            "SEP": FOLDER_SEPERATOR,
         }
 
     def run(
@@ -25,9 +27,9 @@ class ScriptCommand(Command):
         *args,
         **kwargs,
     ):
-        '''
+        """
         Run a Choam script defined in `Choam.toml`
-        or fun a file relative to `Choam.toml` with 
+        or fun a file relative to `Choam.toml` with
         the `--is-file` flag.
 
         Flags:
@@ -36,12 +38,13 @@ class ScriptCommand(Command):
             `--command`: shows the command that is going to execute
 
             `--perspective`: shows where the command will execute
-        '''
+        """
 
         config = self.config.get()
 
         self.ctx._require_choam()
-        if self.describe(path_or_script, **kwargs): return
+        if self.describe(path_or_script, **kwargs):
+            return
 
         if "is_file" in kwargs.keys() or args:
             path = path_or_script
@@ -61,10 +64,10 @@ class ScriptCommand(Command):
             subprocess.call(
                 [
                     PYTHON_INTERPRETER,
-                    os.path.join(self.directory, self.project_name, path)
+                    os.path.join(self.directory, self.project_name, path),
                 ]
             )
-            
+
             return
 
         script = path_or_script
@@ -73,13 +76,13 @@ class ScriptCommand(Command):
         if "perspective" in command_keys:
             perspective = config["script"][script]["perspective"]
             perspective = self.replace_with_script_vars(perspective)
-        
+
         else:
             perspective = self.directory
 
         if "requires" in command_keys:
             requires = config["script"][script]["requires"]
-        
+
         else:
             requires = []
 
@@ -87,18 +90,14 @@ class ScriptCommand(Command):
         command = self.replace_with_script_vars(command)
 
         for req in requires:
-            self.ctx.add(
-                dependency_name=req,
-                install=True,
-                dev=True
-            )
+            self.ctx.add(dependency_name=req, install=True, dev=True)
 
         self.ctx._log(f"({perspective}) : {command}")
         os.system(f"cd {perspective} && {command}")
 
     def describe(self, script, **kwargs) -> bool:
-        '''
-        Describe the details of a script. Returns a bool depending 
+        """
+        Describe the details of a script. Returns a bool depending
         on whether or not it desciped a script
 
         Triggered when the use of the following flags
@@ -109,7 +108,7 @@ class ScriptCommand(Command):
             `--perspective`: Shows where the command is going to run
 
             `--command`: Shows the actual command that is going to run
-        '''
+        """
 
         config = self.config.get()
 
@@ -128,14 +127,14 @@ class ScriptCommand(Command):
 
             return True
 
-        elif kwargs.get("command" ,None):
+        elif kwargs.get("command", None):
             command_value = config["script"][script]["perspective"]
             command_value = self.replace_with_script_vars(command_value)
 
             self.ctx._log(f"(command) {script}: {command_value}")
 
             return True
-        
+
         else:
             return False
 

@@ -1,25 +1,28 @@
+"""
+Choam's reqs command for converting the Choam.toml 
+requirements to `requirements.txt`
+"""
+
 import os
 import subprocess
 
-from choam.constants import PYTHON_INTERPRETER
 from choam.commands.command import Command
+from choam.constants import PYTHON_INTERPRETER
+
 
 class ReqsCommand(Command):
-    '''
+    """
     Choam's command for converting `Choam.toml` requirements
     to `requirements.txt`.
-    '''
+    """
 
-    def __init__(
-        self,
-        choam
-    ):
+    def __init__(self, choam):
         super().__init__(ctx=choam)
 
     def run(self):
-        '''
+        """
         Convert `Choam.toml` requirements to `requirements.txt` accordingly
-        '''
+        """
 
         config = self.config.get()
         directory = self.directory
@@ -27,13 +30,7 @@ class ReqsCommand(Command):
         path = os.path.join(directory, "requirements.txt")
 
         pip_versions_proc = subprocess.Popen(
-            [
-                PYTHON_INTERPRETER,
-                "-m",
-                "pip",
-                "freeze"
-            ],
-            stdout=subprocess.PIPE
+            [PYTHON_INTERPRETER, "-m", "pip", "freeze"], stdout=subprocess.PIPE
         )
 
         pip_versions_string = str(pip_versions_proc.communicate()[0])
@@ -45,7 +42,7 @@ class ReqsCommand(Command):
             if mod.count("==") == 1:
                 mod_name = mod.split("==")[0]
                 mod_ver = mod.split("==")[1]
-            
+
             elif mod.count("@"):
                 mod_name = mod.split("@")[0]
                 mod_ver = mod.split("@")[1]

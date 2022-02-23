@@ -1,22 +1,25 @@
+"""
+Choam command to cleanup build directoris discharged from
+publication
+"""
+
 import os
 import shutil
 
 from choam.commands.command import Command
 
+
 class CleanUpCommand(Command):
-    '''
+    """
     Choam's command to remove build directories discharged
     from publication & attempts
-    '''
+    """
 
-    def __init__(
-        self,
-        choam
-    ):
+    def __init__(self, choam):
         super().__init__(ctx=choam)
 
     def run(self):
-        project_name = self.project_name()
+        project_name = self.project_name
 
         build_directories = [
             "build",
@@ -29,7 +32,7 @@ class CleanUpCommand(Command):
                 [
                     "Cannot clean up project that matches named with"
                     " item in build directories list.",
-                    f"{project_name} is a reserved build directory name."
+                    f"{project_name} is a reserved build directory name.",
                 ]
             )
 

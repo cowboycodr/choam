@@ -1,7 +1,7 @@
-'''
+"""
 find_dependencies finds project dependencies
 and adds them to Choam.tomls
-'''
+"""
 
 import importlib
 import os

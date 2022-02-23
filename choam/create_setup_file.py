@@ -1,6 +1,6 @@
-'''
+"""
 create_setup_file used for initializing setup configurations
-'''
+"""
 
 from choam.find_dependencies import find_dependencies
 

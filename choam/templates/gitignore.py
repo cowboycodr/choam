@@ -1,6 +1,6 @@
-'''
+"""
 .gitignore template
-'''
+"""
 
 GITIGNORE = """
 # Byte-compiled / optimized / DLL files

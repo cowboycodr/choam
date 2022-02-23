@@ -1,6 +1,6 @@
-'''
+"""
 Choam's folder structure manager
-'''
+"""
 
 import os
 

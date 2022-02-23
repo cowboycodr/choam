@@ -1,16 +1,19 @@
-from choam.find_dependencies import find_dependencies
+"""
+Choam's command for finding depedencies in the Choam
+project and rewriting `Choam.toml` accordingly.
+"""
 
 from choam.commands.command import Command
+from choam.find_dependencies import find_dependencies
+
 
 class DepsCommand(Command):
-    '''
-    Choam's command to find dependencies and 
+    """
+    Choam's command to find dependencies and
     rewrite `Choam.toml` accordingly
-    '''
-    def __init__(
-        self,
-        choam
-    ):
+    """
+
+    def __init__(self, choam):
         super().__init__(ctx=choam)
 
     def run(self):
@@ -27,14 +30,9 @@ class DepsCommand(Command):
 
         # Merging already known imports with new
         # found imports
-        dependencies = {
-            **config["modules"],
-            **{dep: "*" for dep in dependencies}
-        }
+        dependencies = {**config["modules"], **{dep: "*" for dep in dependencies}}
 
         # Sorting configurations by length
-        config["modules"] = {
-            key: value for key, value in dependencies.items()
-        }
+        config["modules"] = {dependencies.items()}
 
         self.config.set(config)

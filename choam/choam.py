@@ -1,4 +1,4 @@
-'''
+"""
 Choam command-line interface entry point
 
 Choam is a python project manager with the following capabilities:
@@ -6,35 +6,24 @@ Choam is a python project manager with the following capabilities:
 - dependencies
 - configurations
 - publication
-'''
+"""
 
-import os
 import sys
-import shutil
-import subprocess
 from typing import Optional
 
 import fire
-import pkg_resources
-import toml
 
 from choam.commands import *
-from choam.constants import (FOLDER_SEPERATOR, OPERATING_SYSTEM,
-                             PYTHON_INTERPRETER, SETUP_FILE_NAME)
-from choam.create_setup_file import create_setup_file
-from choam.find_dependencies import find_dependencies
-from choam.folder_structure import FolderStructure as FS
-from choam.gitignore import GITIGNORE
 from choam.config_manager import ConfigManager
+from choam.constants import OPERATING_SYSTEM
+from choam.folder_structure import FolderStructure as FS
 
-
-PROJECT_NAME = FS.get_project_name()
 
 class Choam:
-    '''
+    """
     Choam is a Python project manager designed for
     maanging dependencies, configurations and more.
-    '''
+    """
 
     def __init__(self):
         self.configurations = ConfigManager()
@@ -59,18 +48,18 @@ class Choam:
             print()
 
     def config(self, key: str, *values):
-        '''
+        """
         Choam's config command for reading/managing
         configurations from the command-line using Choam
-        '''
+        """
         ConfigCommand(self).run(key, *values)
 
     def init(self, adapt: Optional[bool] = None):
-        '''
+        """
         Choam's initialize command for initializing
-        a new Choam project inside the working 
+        a new Choam project inside the working
         directory
-        '''
+        """
         InitCommand(self).run(adapt)
 
     def cleanup(self):
@@ -87,12 +76,7 @@ class Choam:
         """
         NewCommand(self).run(name=name)
 
-    def script(
-        self,
-        path_or_script: str = "",
-        *args,
-        **kwargs
-    ):
+    def script(self, path_or_script: str = "", *args, **kwargs):
         """
         Run a `Choam` script defined in `Choam.toml` or run project's default entry
         point or specify a relative filepath for Choam to run.
@@ -168,11 +152,12 @@ class Choam:
 
 
 def main():
-    '''
+    """
     Choam main entrypoint for setup.py console scripts
-    '''
+    """
 
     fire.Fire(Choam())
+
 
 if __name__ == "__main__":
     main()

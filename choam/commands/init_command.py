@@ -1,31 +1,33 @@
+"""
+Choam's command to initialize a new project
+in the current directory.
+
+Initialize a brand new project or adapt a 
+pre-existing project to Choam's standards
+"""
+
 import os
 import shutil
-
 from pathlib import Path
 from typing import Optional
 
 from choam.commands.command import Command
-from choam.templates.gitignore import GITIGNORE
+from choam.constants import FOLDER_SEPERATOR
 from choam.folder_structure import FolderStructure as FS
+from choam.templates.gitignore import GITIGNORE
 
-from choam.constants import (
-    FOLDER_SEPERATOR
-)
 
 class InitCommand(Command):
-    '''
+    """
     Choam's initialize command for initializing
-    a new Choam project inside the working 
+    a new Choam project inside the working
     directory
-    '''
+    """
 
     def __init__(self, choam):
         super().__init__(ctx=choam)
 
-    def run(
-        self,
-        adapt: Optional[bool] = None
-    ):
+    def run(self, adapt: Optional[bool] = None):
         directory = self.directory
         name = self.project_name
 
@@ -59,12 +61,10 @@ class InitCommand(Command):
 
         FS.construct_from_dict(template, directory)
 
-    def adapt(
-        self
-    ):
-        '''
+    def adapt(self):
+        """
         Adapt a pre-existing project to Choam's standards
-        '''
+        """
 
         project_name = self.project_name
         directory = self.directory
@@ -104,35 +104,31 @@ class InitCommand(Command):
             )
 
             try:
-                os.makedirs(
-                    dest,
-                    mode=0o777,
-                    exist_ok=True
-                )
+                os.makedirs(dest, mode=0o777, exist_ok=True)
             except OSError:
                 self.ctx._log(f"(ignored) Error: Failed to make '{dest}'")
 
             do_move = input(
-                f"Would you like to move: '{os.path.abspath(item_name)}'?"
-                " (Y/n)"
+                f"Would you like to move: '{os.path.abspath(item_name)}'?" " (Y/n)"
             )
 
-            if do_move == "" \
-                    or do_move.lower().startswith("y"):
-                
+            if do_move == "" or do_move.lower().startswith("y"):
+
                 try:
                     shutil.move(item, dest)
                 except FileNotFoundError as e:
                     self.ctx._log(f"(ignored) Item not found: '{item_name}'")
                 except PermissionError as e:
-                    self.ctx._log(f"(fatal) Unable to adapt directory files due to system permissions.")
+                    self.ctx._log(
+                        f"(fatal) Unable to adapt directory files due to system permissions."
+                    )
                     break
 
         template = {
             f"{FOLDER_SEPERATOR}Choam.toml": (
                 f'[package]\nname="{project_name}"\nversion="0.0.0"\n'
                 f'description=""\nrepo="*required*"\nkeywords=[]'
-                f'\n\n[modules-ignore]\n\n[modules]'
+                f"\n\n[modules-ignore]\n\n[modules]"
             ),
             f"{FOLDER_SEPERATOR}README.md": (
                 f"{project_name}\n###This project was structure with"
