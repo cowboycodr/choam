@@ -25,3 +25,6 @@ class ConfigManager:
 
         Path(self.CHOAM_CONFIG_PATH) \
                 .write_text(toml.dumps(_new), encoding="utf-8")
+
+    def is_section(self, section_name: str) -> bool:
+        return section_name in self.get().keys()

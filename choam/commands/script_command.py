@@ -113,14 +113,14 @@ class ScriptCommand(Command):
 
         config = self.config.get()
 
-        if "description" in kwargs.keys():
+        if kwargs.get("description", None):
             description_value = config["script"][script]["description"]
 
             self.ctx._log(f"(description) {script}: {description_value}")
 
             return True
 
-        elif "perspective" in kwargs.keys():
+        elif kwargs.get("perspective", None):
             perspective_value = config["script"][script]["perspective"]
             perspective_value = self.replace_with_script_vars(perspective_value)
 
@@ -128,7 +128,7 @@ class ScriptCommand(Command):
 
             return True
 
-        elif "command" in kwargs.keys():
+        elif kwargs.get("command" ,None):
             command_value = config["script"][script]["perspective"]
             command_value = self.replace_with_script_vars(command_value)
 

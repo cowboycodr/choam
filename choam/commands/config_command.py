@@ -20,8 +20,8 @@ class ConfigCommand(Command):
         config = self.config.get()
 
         if len(values) == 0:
-            if key in config['packages'].keys():
-                value = config['packages'][key]
+            if key in config['package'].keys():
+                value = config['package'][key]
 
                 self.ctx._log(f"{key}: {value}")
 
@@ -30,6 +30,6 @@ class ConfigCommand(Command):
         if len(values) == 1:
             values = values[0]
 
-        config['packages'][key] = values
+        config['package'][key] = values
 
         self.config.set(config)

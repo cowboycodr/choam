@@ -41,20 +41,8 @@ class Choam:
 
     def _require_choam(self):
         if not FS.is_choam_project():
-            Choam._log("Must be a choam project.")
+            self._log("Must be a choam project.")
             sys.exit()
-
-    def _is_config_section(self, section_name: str) -> bool:
-        if section_name in self.configurations.get().keys():
-            return True
-
-        return False
-
-    def _add_config_section(self, section_name: str):
-        new_config = self.configurations.get()
-        new_config[section_name] = ""
-
-        self.configirations.set(new_config)
 
     def _log(self, message: str):
         print(f"\n\t{message}")
@@ -75,7 +63,7 @@ class Choam:
         Choam's config command for reading/managing
         configurations from the command-line using Choam
         '''
-        ConfigCommand(self).run(key, values)
+        ConfigCommand(self).run(key, *values)
 
     def init(self, adapt: Optional[bool] = None):
         '''
@@ -97,25 +85,7 @@ class Choam:
         Initalize and generate a Choam project
         inside of a new directory
         """
-        NewCommand(self).run(name)
-
-    def _log_run_script(
-        self,
-        description,
-        command,
-        perspective,
-        description_value,
-        command_value,
-        perspective_value,
-    ):
-        if description:
-            self._log(description_value)
-
-        elif command:
-            self._log(command_value)
-
-        elif perspective:
-            self._log(perspective_value)
+        NewCommand(self).run(name=name)
 
     def script(
         self,
@@ -140,93 +110,11 @@ class Choam:
             **kwargs,
         )
 
-    def _init_setup(self):
-        directory = os.getcwd()
-
-        config = self.configurations.get()
-
-        package_config = config["package"]
-        name = package_config["name"]
-        version = package_config["version"]
-
-        try:
-            description = package_config["description"]
-        except KeyError:
-            description = ""
-
-        try:
-            repo_url = package_config["repo"]
-        except KeyError:
-            repo_url = ""
-
-        modules = config["modules"]
-
-        template = {
-            f"{FOLDER_SEPERATOR}{SETUP_FILE_NAME}": create_setup_file(
-                name,
-                version,
-                description,
-                modules,
-                repo_url,
-            )
-        }
-
-        self._log_multiple(
-            [
-                f"Successfully setup '{name}' for PyPi publication",
-                "Use '$ choam publish' when configurations have been set",
-            ]
-        )
-
-        FS.construct_from_dict(template, f"{directory}{FOLDER_SEPERATOR}")
-
     def setup(self):
         """
-        Configure `setup.py` according to `Choam.toml` while
-        keeping all other configurations.
-
-        If `setup.py` file does not exist then it will create
-        it.
-
-        Additional configurations may be done to `setup.py`
-        after this command has been run.
+        Automatically configure `setup.py` according to `Choam.toml`
         """
-
-        if not FS.is_choam_project():
-            self._log(f"{os.getcwd()}: not a Choam project.")
-
-            return
-
-        if not os.path.exists("setup.py"):
-            self._init_setup()
-
-            return
-
-        config = self.configurations.get()
-        new_setup_file = ""
-
-        # Rewrite with `Choam.toml` configurations
-        with open("./setup.py", "r", encoding="utf-8") as file:
-            format_line = lambda l: "\t" + l + ",\n"
-
-            for line in file.readlines():
-                if line.strip().startswith("version"):
-                    new_setup_file += format_line(
-                        f'version="{config["package"]["version"]}"'
-                    )
-
-                elif line.strip().startswith("install_requires"):
-                    modules = config["modules"]
-
-                    new_setup_file += format_line(
-                        f"install_requires={list(modules)}"
-                    )
-
-                else:
-                    new_setup_file += line
-
-        with open("setup.py", "w", encoding="utf-8") as file:
-            file.write(new_setup_file)
+        SetupCommand(self).run()
 
     def add(
         self,
@@ -238,206 +126,45 @@ class Choam:
         """
         Add a required depedency to the depdency list
         """
-
-        config = self.configurations.get()
-
-        if ignore:
-            config["modules-ignore"][dependency_name] = "*"
-
-            if dependency_name in config["modules"].keys():
-                config["modules"].pop(dependency_name)
-
-            self.configurations.set(config)
-
-            return
-
-        if dev:
-            if not self._is_config_section("modules-dev"):
-                config["modules-dev"] = {}
-
-            config["modules-dev"][dependency_name] = "*"
-
-            if dependency_name in config["modules"]:
-                config["modules"].pop(dependency_name)
-
-        else:
-            config["modules"][dependency_name] = "*"
-
-        self.configurations.set(config)
-
-        if install:
-            self.install()
+        AddCommand(self).run(
+            dependency_name=dependency_name,
+            install=install,
+            dev=dev,
+            ignore=ignore,
+        )
 
     def install(self, dep: Optional[str] = None):
         """
-        Install all required dependencies from `Choam.toml`
-        modules section.
+        Install all required dependencies according to
+        `Choam.toml`
 
         Args
             :dep: add depedency to required modules and install
-
-            :find_deps: find project's required dependencies and install
-            immediately
         """
-
-        if dep:
-            self.add(dep)
-
-        config = self.configurations.get()
-
-        if not self._is_config_section("modules-dev"):
-            config["modules-dev"] = {}
-
-        modules = {
-            **config["modules"],
-            **config["modules-dev"],
-        }
-
-        required_mods = set(modules)
-        installed_mods = {mod.key for mod in set(pkg_resources.working_set)}
-        missing_mods = required_mods - installed_mods
-
-        for mod in missing_mods:
-            self._log(f"Installing {mod}")
-
-            module_string = (
-                f"{mod}=={modules[mod]}"
-                if modules[mod] != "*"
-                else f"{mod}--upgrade"
-            )
-            upgrade_module = module_string.endswith("--upgrade")
-
-            subprocess.call(
-                [
-                    PYTHON_INTERPRETER,
-                    "-m",
-                    "pip",
-                    "install",
-                    module_string.replace("--upgrade", ""),
-                    "--upgrade" if upgrade_module else "",
-                ]
-            )
+        InstallCommand(self).run(dep)
 
     def publish(self):
         """
-        Publish package to https://PyPi.org following `Choam.toml` and `setup.py`
-        configurations
+        Publish current Choam project to https://pypi.org
 
-        > Note: this method requires your https://PyPi.org credentials for twine
-        to properly publish.
-
-        Args:
-            :setup_file_name: file to pull configurations from by default `setup.py`
+        > Note: this method uses twin which will require
+        your pypi credentials. Choam is no way affiliated
+        twine and it is beyond our responsibility.
         """
-
-        self.add("twine")
-        self.add("wheel")
-        self.install()
-
-        self._log(
-            "Attempting real publication to https://test.pypi.org/legacy"
-        )
-
-        subprocess.call(
-            [
-                PYTHON_INTERPRETER,
-                f"{SETUP_FILE_NAME}",
-                "sdist",
-                "bdist_wheel",
-            ]
-        )
-        subprocess.call(
-            [
-                PYTHON_INTERPRETER,
-                "-m",
-                "twine",
-                "upload",
-                "dist/*",
-            ]
-        )
-
-        self._log("Real publication attempt completed")
+        PublishCommand(self).run()
 
     def deps(self):
         """
-        Automatically search project files for imported
-        depedencies and add them to `Choam.toml` as well
-        as setup
+        Find dependencies and rewrite `Choam.toml`
+        accordingly.
         """
-
-        dependencies = find_dependencies()
-        config = self.configurations.get()
-
-        for dep in config["modules-ignore"]:
-            if dep in config["modules"].keys():
-                config["modules"].pop(dep)
-
-        # Merging pre-existing dependencies with new found ones
-        dep_config = {
-            **config["modules"],
-            **{dep: "*" for dep in dependencies},
-        }
-
-        # Sorting configurations by length
-        config["modules"] = {
-            key: dep_config[key] for key in sorted(dep_config, key=len)
-        }
-
-        self.configurations.set(config)
+        DepsCommand(self).run()
 
     def reqs(self):
         """
         Convert `Choam.toml` to `requirements.txt` accordingly
         """
-
-        config = self.configurations.get()
-        directory = os.getcwd()
-        path = "requirements.txt"
-
-        pip_versions_proc = subprocess.Popen(
-            [PYTHON_INTERPRETER, "-m", "pip", "freeze"],
-            stdout=subprocess.PIPE
-        )
-
-        pip_versions_string = str(pip_versions_proc.communicate()[0])
-        pip_versions_proc.kill()
-
-        pip_versions = {}
-
-        for mod in pip_versions_string.split("\\n"):
-            if mod.count("==") > 0:
-                mod_name = mod.split("==")[0]
-                mod_ver = mod.split("==")[1]
-            elif mod.count("@"):
-                mod_name = mod.split("@")[0].strip()
-                mod_ver = mod.split("@")[1].strip()
-            else:
-                continue
-
-            pip_versions[mod_name] = mod_ver
-
-        requirements_content = ""
-        for mod in config["modules"]:
-            mod_name = mod
-            mod_ver = config["modules"][mod_name]
-
-            if mod_ver == "*":
-                try:
-                    mod_ver = pip_versions[mod_name]
-                except KeyError:
-                    continue
-
-            requirements_content += f"{mod_name}=={mod_ver}\n"
-
-        template = {path: requirements_content}
-
-        if os.path.exists(path):
-            self._log(
-                f"{path}: Already exists. Either delete or rewrite requirements"
-                " accordingly."
-            )
-
-        FS.construct_from_dict(template, directory)
+        ReqsCommand(self).run()
 
 
 def main():
@@ -446,7 +173,6 @@ def main():
     '''
 
     fire.Fire(Choam())
-
 
 if __name__ == "__main__":
     main()

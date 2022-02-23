@@ -18,7 +18,7 @@ class NewCommand(Command):
 
     def run(self, name: str):
         directory = self.directory
-        folder_name = self.project_name 
+        folder_name = name
 
         # Choam project template
         template = {
@@ -44,4 +44,5 @@ class NewCommand(Command):
             f"{FOLDER_SEPERATOR}{folder_name}{FOLDER_SEPERATOR}setup.py": "",
         }
 
+        print(template)
         FS.construct_from_dict(template, directory)

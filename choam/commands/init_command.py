@@ -36,7 +36,7 @@ class InitCommand(Command):
 
         if adapt:
             # TODO: Implement Initcommand@adapt method
-            self.adapt(directory, name)
+            self.adapt()
 
             return
 
@@ -83,19 +83,32 @@ class InitCommand(Command):
         ]
 
         for item in os.listdir(directory):
+            if os.path.isdir(item):
+                continue
+
             item_name = item.split(FOLDER_SEPERATOR)[-1]
 
             if item_name in project_files:
                 continue
 
-            dest = FOLDER_SEPERATOR.join(*Path(item).parents, project_name, item_name)
+            dest = (
+                os.path.abspath(
+                    FOLDER_SEPERATOR.join(item.split(FOLDER_SEPERATOR)[:-1])
+                    + FOLDER_SEPERATOR
+                    + project_name
+                    + FOLDER_SEPERATOR
+                    + item_name
+                )
+                .replace(FOLDER_SEPERATOR, "", 1)
+                .replace(item_name, "", 1)
+            )
 
             try:
                 os.makedirs(
                     dest,
-                    mode=0o666,
+                    mode=0o777,
                     exist_ok=True
-                ) 
+                )
             except OSError:
                 self.ctx._log(f"(ignored) Error: Failed to make '{dest}'")
 
@@ -108,9 +121,12 @@ class InitCommand(Command):
                     or do_move.lower().startswith("y"):
                 
                 try:
-                    shutil.move(item_name, dest)
-                except FileNotFoundError:
+                    shutil.move(item, dest)
+                except FileNotFoundError as e:
                     self.ctx._log(f"(ignored) Item not found: '{item_name}'")
+                except PermissionError as e:
+                    self.ctx._log(f"(fatal) Unable to adapt directory files due to system permissions.")
+                    break
 
         template = {
             f"{FOLDER_SEPERATOR}Choam.toml": (
