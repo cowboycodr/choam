@@ -185,7 +185,7 @@ class Choam:
                 "__version__ == '0.1'"
             ),
             f"{FOLDER_SEPERATOR}Choam.toml": (
-                f'[package]\nname = "{name}\nversion = "0.0.1"\ndescription ='
+                f'[package]\nname = "{name}"\nversion = "0.0.1"\ndescription ='
                 ' ""\n\n[modules-ignore]\n\n[modules]'
             ),
             f"{FOLDER_SEPERATOR}README.md": (
@@ -284,7 +284,7 @@ class Choam:
         elif perspective:
             self._log(perspective_value)
 
-    def script(
+    def run(
         self,
         path_or_script: str = "",
         is_file: Optional[bool] = None,
