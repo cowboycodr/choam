@@ -33,7 +33,7 @@ for _type, diff in downloads_difference.items():
   if int(diff) > 0:
     downloads_difference[_type] = "+" + diff
   elif int(diff) < 0:
-    downloads_difference[_type] = "-" + diff
+    downloads_difference[_type] = diff
 
 table = Table(title="Choam downloads")
 
