@@ -27,7 +27,7 @@ class ConfigCommand(Command):
             if key in config["package"].keys():
                 value = config["package"][key]
 
-                self.ctx._log(f"{key}: {value}")
+                self.messenger.log(f"{key}: {value}")
 
             return
 

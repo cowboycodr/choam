@@ -32,7 +32,7 @@ class InitCommand(Command):
         name = self.project_name
 
         if FS.is_choam_project(directory):
-            self.ctx._log("Already a choam project.")
+            self.messenger.log("Already a choam project.", self.messenger.types.WARNING)
 
             return
 
@@ -106,7 +106,7 @@ class InitCommand(Command):
             try:
                 os.makedirs(dest, mode=0o777, exist_ok=True)
             except OSError:
-                self.ctx._log(f"(ignored) Error: Failed to make '{dest}'")
+                self.messenger.log(f"(ignored) Error: Failed to make '{dest}'")
 
             do_move = input(
                 f"Would you like to move: '{os.path.abspath(item_name)}'?" " (Y/n)"
@@ -117,9 +117,9 @@ class InitCommand(Command):
                 try:
                     shutil.move(item, dest)
                 except FileNotFoundError as e:
-                    self.ctx._log(f"(ignored) Item not found: '{item_name}'")
+                    self.messenger.log(f"(ignored) Item not found: '{item_name}'")
                 except PermissionError as e:
-                    self.ctx._log(
+                    self.messenger.log(
                         f"(fatal) Unable to adapt directory files due to system permissions."
                     )
                     break

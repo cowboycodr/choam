@@ -28,7 +28,7 @@ class CleanUpCommand(Command):
         ]
 
         if project_name in build_directories:
-            self.ctx._log_multiple(
+            self.messenger.log_array(
                 [
                     "Cannot clean up project that matches named with"
                     " item in build directories list.",

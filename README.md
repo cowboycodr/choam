@@ -1,8 +1,5 @@
 # Choam
 
-> Note: This is future choam **development** branch, with untested features, and compatability. Overall: **UNSAFE**
-___
-
 <a href="https://pepy.tech/project/choam"><img src="https://img.shields.io/pypi/dw/choam"></a>
 <a href="https://pypi.org/project/choam"><img src="https://img.shields.io/pypi/v/choam"></a>
 <a href="https://github.com/cowboycodr/choam"><img alt="LOC" src="https://shields.io/tokei/lines/github/cowboycodr/choam"></a>

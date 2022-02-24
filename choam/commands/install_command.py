@@ -3,7 +3,9 @@ Choam's command to install required dependencies
 from `Choam.toml`
 """
 
+import os
 import subprocess
+from ctypes import WinError
 from typing import Optional
 
 import pkg_resources
@@ -47,21 +49,35 @@ class InstallCommand(Command):
         missing_mods = required_mods - installed_mods
 
         for mod in missing_mods:
-            self.ctx._log(f"Installing {mod}")
+            self.messenger.log(f"Installing {mod}")
 
             module_string = (
                 f"{mod}=={modules[mod]}" if modules[mod] != "*" else f"{mod}--upgrade"
             )
 
             upgrade_module = module_string.endswith("--upgrade")
+            module_string = module_string.replace("--upgrade")
 
-            subprocess.call(
-                [
-                    PYTHON_INTERPRETER,
-                    "-m",
-                    "pip",
-                    "install",
-                    module_string.replace("--upgrade", ""),
-                    "--upgrade" if upgrade_module else "",
-                ]
-            )
+            try:
+                subprocess.call(
+                    [
+                        PYTHON_INTERPRETER,
+                        "-m",
+                        "pip",
+                        "install",
+                        module_string,
+                        "--upgrade" if upgrade_module else "",
+                    ]
+                )
+            except WinError:
+                self.windows_install(module_string, upgrade_module)
+
+    def windows_install(self, module_string: str, upgrade_module: bool):
+        os.system(' '.join([
+            PYTHON_INTERPRETER,
+            "-m",
+            "pip",
+            "install",
+            module_string.replace,
+            "--upgrade" if upgrade_module else ""
+        ]))

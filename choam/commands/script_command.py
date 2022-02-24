@@ -92,7 +92,8 @@ class ScriptCommand(Command):
         for req in requires:
             self.ctx.add(dependency_name=req, install=True, dev=True)
 
-        self.ctx._log(f"({perspective}) : {command}")
+        self.messenger.newline()
+        self.messenger.log_single_line(f"({perspective}) : {command}")
         os.system(f"cd {perspective} && {command}")
 
     def describe(self, script, **kwargs) -> bool:
@@ -115,7 +116,7 @@ class ScriptCommand(Command):
         if kwargs.get("description", None):
             description_value = config["script"][script]["description"]
 
-            self.ctx._log(f"(description) {script}: {description_value}")
+            self.messenger.log(f"(description) {script}: {description_value}")
 
             return True
 
@@ -123,7 +124,7 @@ class ScriptCommand(Command):
             perspective_value = config["script"][script]["perspective"]
             perspective_value = self.replace_with_script_vars(perspective_value)
 
-            self.ctx._log(f"(perspective) {script}: {perspective_value}")
+            self.messenger.log(f"(perspective) {script}: {perspective_value}")
 
             return True
 
@@ -131,7 +132,7 @@ class ScriptCommand(Command):
             command_value = config["script"][script]["perspective"]
             command_value = self.replace_with_script_vars(command_value)
 
-            self.ctx._log(f"(command) {script}: {command_value}")
+            self.messenger.log(f"(command) {script}: {command_value}")
 
             return True
 

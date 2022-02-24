@@ -12,8 +12,6 @@ platform = "*"
 [modules]
 fire = "*"
 toml = "*"
-twine = "*"
-wheel = "*"
 choam = "*"
 typing = "*"
 autoapi = "*"
@@ -24,6 +22,8 @@ black = "*"
 requests = "*"
 pylint = "*"
 rich = "*"
+twine = "*"
+wheel = "*"
 
 [script.install-reqs]
 perspective = "."

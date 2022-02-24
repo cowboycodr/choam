@@ -86,10 +86,13 @@ class MessageArray:
         return self._type
 
 class Messenger:
+    types = Message.types
+
     def __init__(self):
         self._history = []
 
     def log(self, content: str, _type: Optional[MessageType] = None):
+        self.newline()
         message = Message(content, _type)
         message.send()
         
@@ -102,6 +105,15 @@ class Messenger:
         
         self._history.append(message)
     
+    def log_array(self, content: "list[str]"):
+        MessageArray(content).send()
+
+    def newline(self):
+        '''
+        Print a new line to the console
+        '''
+        print()
+
     def session(self):
         return MessengerSession()
     
@@ -143,3 +155,4 @@ if __name__ == '__main__':
     with messenger.session() as session:
         session.log("Hello, world!")
         session.log("Attempting additional section")
+        session.log("(ignored) Fatal: Application can't properly run without proper configurations", _type=session.types.ERROR)

@@ -4,6 +4,7 @@ publishing the current Choam project to https://pypi.org
 """
 
 import subprocess
+from typing import Optional
 
 from choam.commands.command import Command
 from choam.constants import PYTHON_INTERPRETER
@@ -18,7 +19,10 @@ class PublishCommand(Command):
     def __init__(self, choam):
         super().__init__(ctx=choam)
 
-    def run(self):
+    def run(
+        self,
+        quiet: Optional[bool] = None
+    ):
         """
         Publish current Choam project to https://pypi.org
 
@@ -30,10 +34,41 @@ class PublishCommand(Command):
         self.ctx.add("wheel", dev=True)
         self.ctx.install()
 
-        self.ctx._log("Attempting real publication to https://pypi.org")
 
-        subprocess.call([PYTHON_INTERPRETER, "setup.py", "sdist", "bdist_wheel"])
+        if quiet:
+            out = subprocess.PIPE
+        else:
+            out = None
 
-        subprocess.call([PYTHON_INTERPRETER, "-m", "twine", "upload", "dist/*"])
+        with self.messenger.session() as messenger:
 
-        self.ctx._log("Real publication attempt completed")
+            messenger.log("Attempting real publication to https://pypi.org", _type=messenger.types.WARNING)
+            messenger.newline()
+
+            subprocess.Popen(
+                [
+                    PYTHON_INTERPRETER,
+                    "setup.py",
+                    "sdist",
+                    "bdist_wheel"
+                ],
+                stdout=out
+            ).wait(10)
+
+            messenger.newline()
+            messenger.log("Build completed.", _type=messenger.types.GOOD)
+            messenger.newline()
+
+            subprocess.Popen(
+                [
+                    PYTHON_INTERPRETER,
+                    "-m",
+                    "twine",
+                    "upload",
+                    "dist/*"
+                ],
+            ).wait()
+
+            messenger.newine()
+            messenger.log("Real publication attempt completed", _type=messenger.types.WARNING)
+            messenger.newline()

@@ -57,7 +57,7 @@ class SetupCommand(Command):
         with open(setup_path, "w", encoding="utf8") as file:
             file.write(new_setup_file)
 
-        self.ctx._log(f"Successfully configured '{self.project_name}' for publication")
+        self.messenger.log(f"Successfully configured '{self.project_name}' for publication")
 
     def create_setup_file(self):
         setup_path = os.path.abspath(f"{self.directory}{FOLDER_SEPERATOR}setup.py")

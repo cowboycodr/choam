@@ -33,11 +33,18 @@ for _type, diff in downloads_difference.items():
   if int(diff) > 0:
     downloads_difference[_type] = "+" + diff
   elif int(diff) < 0:
+<<<<<<< HEAD
     downloads_difference[_type] = diff
 
 table = Table(title="Choam downloads")
 
 table.add_column("Stage", justify="left", style="white")
+=======
+    downloads_difference[_type] = "-" + diff
+
+table = Table(title="Choam downloads")
+
+>>>>>>> 6c32358032a8539587db96a6e7b2b3237c4a33dd
 table.add_column("Today", justify="center")
 table.add_column("This Week", justify="center")
 table.add_column("This Month", justify="center")
@@ -48,8 +55,12 @@ table.add_row("Current",
               str(downloads_last_month))
 
 difference_row_style = "green" if downloads_difference["DAY"].startswith("+") else "red"
+<<<<<<< HEAD
 table.add_row("Since run",
               str(downloads_difference["DAY"]),
+=======
+table.add_row(str(downloads_difference["DAY"]),
+>>>>>>> 6c32358032a8539587db96a6e7b2b3237c4a33dd
               str(downloads_difference["WEEK"]),
               str(downloads_difference["MONTH"]), style=difference_row_style)
 

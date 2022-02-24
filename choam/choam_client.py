@@ -14,6 +14,7 @@ from typing import Optional
 import fire
 
 from choam.commands import *
+from choam.message import Messenger
 from choam.constants import OPERATING_SYSTEM
 from choam.folder_structure import FolderStructure as FS
 from choam.message import Messenger
@@ -27,25 +28,12 @@ class Choam:
 
     def __init__(self):
         self._messenger = Messenger()
+        self._project_name = FS.get_project_name()
 
     def _require_choam(self):
         if not FS.is_choam_project():
-            self._log("Must be a choam project.")
+            self._messenger.log(f"'{self._project_name}' Must be a Choam project.", _type=self._messenger.types.WARNING)
             sys.exit()
-
-    def _log(self, message: str):
-        print(f"\n\t{message}")
-
-        if OPERATING_SYSTEM != "windows":
-            print()
-
-    def _log_multiple(self, messages: list):
-        print()
-        for message in messages:
-            print(f"\t{message}")
-
-        if OPERATING_SYSTEM != "windows":
-            print()
 
     def config(self, key: str, *values):
         """
@@ -127,7 +115,7 @@ class Choam:
         """
         InstallCommand(self).run(dep)
 
-    def publish(self):
+    def publish(self, quiet: Optional[bool] = None):
         """
         Publish current Choam project to https://pypi.org
 
@@ -135,7 +123,7 @@ class Choam:
         your pypi credentials. Choam is no way affiliated
         twine and it is beyond our responsibility.
         """
-        PublishCommand(self).run()
+        PublishCommand(self).run(quiet)
 
     def deps(self):
         """
