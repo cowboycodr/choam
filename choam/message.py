@@ -2,6 +2,9 @@ from enum import Enum
 from typing import Optional
 
 from rich.console import Console
+
+from choam.constants import OPERATING_SYSTEM
+
 console = Console()
 
 class MessageType(Enum):
@@ -27,18 +30,24 @@ class Message:
     def __init__(
         self,
         content: str,
-        _type: Optional[Enum] = MessageType.NORMAL
+        _type: Optional[Enum] = None
     ):
         self.content = content
+        
         self._type = _type
+        if not self._type:
+            self._type = self.types.NORMAL
 
     def send(self):
         '''
         Sends the message to the console
         '''
-        message_style = message_styles[self.type.name]
         
-        console.print(f"\t[{message_style}] {self.content} [/{message_style}]\n")
+        console.print(f"\t[{self.style}] {self.content} [/{self.style}]\n")
+
+    @property
+    def style(self):
+        return message_styles.get(self.type.name, self.types.NORMAL.name)
 
     @property
     def type(self):
@@ -76,31 +85,61 @@ class MessageArray:
     def type(self):
         return self._type
 
-if __name__ == "__main__":
-    m1 = Message("hello, world!", Message.types.NORMAL)
-    m2 = Message("hello, world!", Message.types.GOOD)
-    m3 = Message("hello, world!", Message.types.WARNING)
-    m4 = Message("hello, world!", Message.types.ERROR)
-
-    m1.send()
-    m2.send()
-    m3.send()
-    m4.send()
-
-    message_array = MessageArray([
-        "hello, world",
-        "hello, world"
-    ])
-
-    message_array.send()
-
 class Messenger:
     def __init__(self):
-        pass
+        self._history = []
 
-    def log(self, content: str, _type: Optional[str] = None):
+    def log(self, content: str, _type: Optional[MessageType] = None):
         message = Message(content, _type)
         message.send()
-
+        
+        self._history.append(message)
+        
+    def log_single_line(self, content: str, _type: Optional[MessageType] = None):
+        message = Message(content, _type)
+        
+        console.print(f"\t[{message.style}]{message.content}[/{message.style}]")
+        
+        self._history.append(message)
+    
     def session(self):
-        pass
+        return MessengerSession()
+    
+    @property
+    def history(self):
+        return self._history
+
+class MessengerSessionLogger(Messenger):
+    '''
+    Typical messenger logging meant for 
+    specific sessions
+    '''
+    def __init__(self) -> None:
+        super().__init__()
+        
+    def log(
+        self,
+        content: str,
+        _type: Optional[MessageType] = None
+    ):
+        self.log_single_line(content, _type)
+
+class MessengerSession:
+    def __init__(self) -> None:
+        self._active_messenger = None
+    
+    def __enter__(self):
+        print()
+        return MessengerSessionLogger()
+    
+    def __exit__(self, type, value, traceback):
+        if OPERATING_SYSTEM != "windows":
+            print()
+        
+if __name__ == '__main__':
+    messenger = Messenger()
+    
+    # Used for logging tasks as they happen
+    with messenger.session() as session:
+        session.log("Hello, world!")
+        session.log("Attempting additional section")

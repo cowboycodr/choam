@@ -1,7 +1,7 @@
-import numpy as np
-
-import requests
 from pathlib import Path
+
+import numpy as np
+import requests
 from rich.console import Console
 from rich.table import Table
 

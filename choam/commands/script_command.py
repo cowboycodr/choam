@@ -64,7 +64,7 @@ class ScriptCommand(Command):
             subprocess.call(
                 [
                     PYTHON_INTERPRETER,
-                    os.path.join(self.directory, self.project_name, path),
+                    os.path.abspath(path),
                 ]
             )
 

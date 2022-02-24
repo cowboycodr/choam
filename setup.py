@@ -1,5 +1,6 @@
 import pathlib
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 directory = pathlib.Path(__file__).parent
 long_description = (directory / "README.md").read_text()

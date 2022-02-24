@@ -16,6 +16,7 @@ import fire
 from choam.commands import *
 from choam.constants import OPERATING_SYSTEM
 from choam.folder_structure import FolderStructure as FS
+from choam.message import Messenger
 
 
 class Choam:
@@ -25,7 +26,7 @@ class Choam:
     """
 
     def __init__(self):
-        self._messenger = Messanger()
+        self._messenger = Messenger()
 
     def _require_choam(self):
         if not FS.is_choam_project():
