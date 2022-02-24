@@ -390,7 +390,8 @@ class Choam:
             self.add(dependency_name=req, install=True, dev=True)
 
         self._log(f"({perspective}) : {command}")
-        os.system(f"cd {perspective} && {command}")
+        os.chdir(perspective)
+        os.system(f"{command}")
 
     def _init_setup(self):
         directory = os.getcwd()
@@ -559,16 +560,15 @@ class Choam:
             )
             upgrade_module = module_string.endswith("--upgrade")
 
-            subprocess.call(
-                [
-                    PYTHON_INTERPRETER,
-                    "-m",
-                    "pip",
-                    "install",
-                    module_string.replace("--upgrade", ""),
-                    "--upgrade" if upgrade_module else "",
-                ]
-            )
+            command = ' '.join([
+                PYTHON_INTERPRETER,
+                "-m",
+                "pip",
+                "install",
+                module_string.replace("--upgrade", ""),
+                "--upgrade" if upgrade_module else ""
+            ])
+            os.system(command)
 
     def publish(self):
         """
