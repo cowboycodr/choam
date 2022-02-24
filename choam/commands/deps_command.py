@@ -33,6 +33,6 @@ class DepsCommand(Command):
         dependencies = {**config["modules"], **{dep: "*" for dep in dependencies}}
 
         # Sorting configurations by length
-        config["modules"] = {dependencies.items()}
+        config["modules"] = {**dependencies}
 
         self.config.set(config)

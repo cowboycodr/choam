@@ -16,6 +16,7 @@ choam = "*"
 typing = "*"
 autoapi = "*"
 findimports = "*"
+importlib = "*"
 
 [modules-dev]
 black = "*"
