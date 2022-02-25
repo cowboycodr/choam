@@ -2,4 +2,4 @@
 Choam
 '''
 
-from choam.choam import main
+from choam.choam_client import main
