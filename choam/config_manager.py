@@ -27,3 +27,13 @@ class ConfigManager:
 
     def is_section(self, section_name: str) -> bool:
         return section_name in self.get().keys()
+
+    @property
+    def state(self):
+        """
+        The current state of `Choam.toml`
+
+        Syntactic sugar for `ConfigManager().get()`
+        """
+
+        return self.get()

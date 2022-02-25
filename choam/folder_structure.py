@@ -6,6 +6,9 @@ import os
 import sys
 
 from choam.constants import FOLDER_SEPERATOR
+from choam.message import Messenger
+
+_messenger = Messenger()
 
 
 class FolderStructure:
@@ -97,4 +100,5 @@ class FolderStructure:
         """
 
         if not FolderStructure.is_choam_project():
+            _messenger.log("Must be a Choam project.")
             sys.exit()

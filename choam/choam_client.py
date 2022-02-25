@@ -27,6 +27,7 @@ from choam.commands import (
     SetupCommand,
 )
 from choam.folder_structure import FolderStructure as FS
+from choam.config_manager import ConfigManager
 from choam.message import Messenger
 
 
@@ -39,14 +40,6 @@ class Choam:
     def __init__(self):
         self._messenger = Messenger()
         self._project_name = FS.get_project_name()
-
-    def _require_choam(self):
-        if not FS.is_choam_project():
-            self._messenger.log(
-                f"'{self._project_name}' Must be a Choam project.",
-                _type=self._messenger.types.WARNING,
-            )
-            sys.exit()
 
     def config(self, key: str, *values):
         """
