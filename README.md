@@ -1,4 +1,5 @@
 # Choam
+> Note: This branch is the future development of Choam and is currently unstable. While it does possess some pretty cool features: It is best not to use this branch for production uses at the moment.
 
 <a href="https://pepy.tech/project/choam"><img src="https://img.shields.io/pypi/dw/choam"></a>
 <a href="https://pypi.org/project/choam"><img src="https://img.shields.io/pypi/v/choam"></a>
