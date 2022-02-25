@@ -3,6 +3,7 @@ Choam's folder structure manager
 """
 
 import os
+import sys
 
 from choam.constants import FOLDER_SEPERATOR
 
@@ -88,3 +89,12 @@ class FolderStructure:
         """
 
         return os.getcwd().split(FOLDER_SEPERATOR)[-1]
+
+    @staticmethod
+    def require_choam():
+        """
+        Terminate command if Choam if not found in project
+        """
+
+        if not FolderStructure.is_choam_project():
+            sys.exit()

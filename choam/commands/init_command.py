@@ -8,7 +8,6 @@ pre-existing project to Choam's standards
 
 import os
 import shutil
-from pathlib import Path
 from typing import Optional
 
 from choam.commands.command import Command
@@ -116,11 +115,11 @@ class InitCommand(Command):
 
                 try:
                     shutil.move(item, dest)
-                except FileNotFoundError as e:
+                except FileNotFoundError:
                     self.messenger.log(f"(ignored) Item not found: '{item_name}'")
-                except PermissionError as e:
+                except PermissionError:
                     self.messenger.log(
-                        f"(fatal) Unable to adapt directory files due to system permissions."
+                        "(fatal) Unable to adapt directory files due to system permissions."
                     )
                     break
 

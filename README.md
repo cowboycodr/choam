@@ -23,7 +23,6 @@ The most useful snippets of `Choam`
 > Note: Depending on your system's configurations, Choam might have to be prefixed with `$ python3 -m` like this, `$ python3 -m choam <COMMAND>` 
 
 #### To create a new project
-
 `$ choam new <project_name>`
 
 #### To initialize a project in the current directory

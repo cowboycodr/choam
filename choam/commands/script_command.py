@@ -42,10 +42,11 @@ class ScriptCommand(Command):
 
         config = self.config.get()
 
-        self.ctx._require_choam()
+        self.fs.require_choam()
         if self.describe(path_or_script, **kwargs):
             return
 
+        # trunk-ignore(pylint/C0201)
         if "is_file" in kwargs.keys() or args:
             path = path_or_script
 

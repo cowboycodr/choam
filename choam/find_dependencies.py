@@ -205,6 +205,7 @@ IGNORE_DEPS = [
     "zoneinfo",
 ]
 
+
 def _find_dependencies(project_path: Path, project_name):
     """
     Find all dependencies of a given project
@@ -256,7 +257,6 @@ def find_dependencies():
         config = toml.loads(file.read())
 
         project_name = config["package"]["name"]
-        ignored_deps = config["modules-ignore"]
 
     found_depedencies = _find_dependencies(project_path, project_name)
     dependencies = []
@@ -271,6 +271,7 @@ def find_dependencies():
         dependencies.append(dep)
 
     return dependencies
+
 
 if __name__ == "__main__":
     print(IGNORE_DEPS)

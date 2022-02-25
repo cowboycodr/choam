@@ -4,7 +4,6 @@ according to `Choam.toml`
 """
 
 import os
-from typing import Optional
 
 from choam.commands.command import Command
 from choam.constants import FOLDER_SEPERATOR
@@ -24,13 +23,13 @@ class SetupCommand(Command):
         """
         Automaitcally configure `setup.py` according to `Choam.toml`
         """
-        self.ctx._require_choam()
+        self.fs.require_choam()
 
         config = self.config.get()
         setup_path = os.path.abspath(f"{self.directory}{FOLDER_SEPERATOR}setup.py")
 
         if not os.path.exists(setup_path):
-            self.create_setup_file(setup_path)
+            self.create_setup_file()
 
             return
 
@@ -38,18 +37,15 @@ class SetupCommand(Command):
 
         # Rewrite with `Choam.toml` configurations
         with open(setup_path, "r", encoding="utf-8") as file:
-            format_line = lambda l: "\t" + l + ",\n"
 
             for line in file.readlines():
                 if line.strip().startswith("version"):
-                    new_setup_file += format_line(
-                        f'version="{config["package"]["version"]}"'
-                    )
+                    new_setup_file += '\tversion="{config["package"]["version"]},\n"'
 
                 elif line.strip().startswith("install_requires"):
                     modules = config["modules"]
 
-                    new_setup_file += format_line(f"install_requires={list(modules)}")
+                    new_setup_file += f"\tinstall_requires={list(modules)},\n"
 
                 else:
                     new_setup_file += line
@@ -57,7 +53,9 @@ class SetupCommand(Command):
         with open(setup_path, "w", encoding="utf8") as file:
             file.write(new_setup_file)
 
-        self.messenger.log(f"Successfully configured '{self.project_name}' for publication")
+        self.messenger.log(
+            f"Successfully configured '{self.project_name}' for publication"
+        )
 
     def create_setup_file(self):
         setup_path = os.path.abspath(f"{self.directory}{FOLDER_SEPERATOR}setup.py")
@@ -78,7 +76,7 @@ class SetupCommand(Command):
             name=package_info["name"],
             version=package_info["version"],
             description=package_info["description"],
-            modules=package_info["modules"],
+            dependencies=package_info["modules"],
             repo_url=package_info["repo_url"],
         )
 

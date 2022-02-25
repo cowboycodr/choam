@@ -121,7 +121,7 @@ env.bak/
 venv.bak/
 
 # Editor configurations
-.vscode/
+
 
 # Spyder project settings
 .spyderproject

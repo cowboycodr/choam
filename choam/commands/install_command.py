@@ -4,7 +4,6 @@ from `Choam.toml`
 """
 
 import os
-import subprocess
 from typing import Optional
 
 import pkg_resources
@@ -57,30 +56,15 @@ class InstallCommand(Command):
             upgrade_module = module_string.endswith("--upgrade")
             module_string = module_string.replace("--upgrade", "")
 
-            try:
-                subprocess.call(
+            os.system(
+                " ".join(
                     [
                         PYTHON_INTERPRETER,
                         "-m",
                         "pip",
                         "install",
-                        module_string,
+                        module_string.replace,
                         "--upgrade" if upgrade_module else "",
                     ]
                 )
-            except OSError:
-                self.os_install(module_string, upgrade_module)
-            except:
-                self.os_install(module_string, upgrade_module)
-
-    def os_install(self, module_string: str, upgrade_module: bool):
-        ''''''
-
-        os.system(' '.join([
-            PYTHON_INTERPRETER,
-            "-m",
-            "pip",
-            "install",
-            module_string.replace,
-            "--upgrade" if upgrade_module else ""
-        ]))
+            )

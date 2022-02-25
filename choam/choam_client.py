@@ -13,9 +13,19 @@ from typing import Optional
 
 import fire
 
-from choam.commands import *
-from choam.message import Messenger
-from choam.constants import OPERATING_SYSTEM
+from choam.commands import (
+    AddCommand,
+    CleanUpCommand,
+    ConfigCommand,
+    DepsCommand,
+    InitCommand,
+    InstallCommand,
+    NewCommand,
+    PublishCommand,
+    ReqsCommand,
+    ScriptCommand,
+    SetupCommand,
+)
 from choam.folder_structure import FolderStructure as FS
 from choam.message import Messenger
 
@@ -32,7 +42,10 @@ class Choam:
 
     def _require_choam(self):
         if not FS.is_choam_project():
-            self._messenger.log(f"'{self._project_name}' Must be a Choam project.", _type=self._messenger.types.WARNING)
+            self._messenger.log(
+                f"'{self._project_name}' Must be a Choam project.",
+                _type=self._messenger.types.WARNING,
+            )
             sys.exit()
 
     def config(self, key: str, *values):
@@ -64,6 +77,7 @@ class Choam:
         """
         NewCommand(self).run(name=name)
 
+    # trunk-ignore(pylint/W1113)
     def script(self, path_or_script: str = "", *args, **kwargs):
         """
         Run a `Choam` script defined in `Choam.toml` or run project's default entry
