@@ -262,8 +262,11 @@ def find_dependencies():
     dependencies = []
 
     for dep in found_depedencies:
-        if not importlib.util.find_spec(dep):
-            continue
+        try:
+            if not importlib.util.find_spec(dep):
+                continue
+        except:
+            pass
 
         if dep.strip() in IGNORE_DEPS:
             continue
