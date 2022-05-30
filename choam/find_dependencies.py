@@ -256,8 +256,11 @@ def find_dependencies():
         config = toml.loads(file.read())
 
         project_name = config["package"]["name"]
-        ignored_deps = config["modules-ignore"]
-
+        try:
+            ignored_deps = config["modules-ignore"]
+        except KeyError:
+            ignored_deps = []
+        
     found_depedencies = _find_dependencies(project_path, project_name)
     dependencies = []
 
