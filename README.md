@@ -1,6 +1,6 @@
 # Choam
 
-<a href="https://pepy.tech/project/choam"><img src="https://img.shields.io/pypi/dw/choam"></a>
+<a href="https://pepy.tech/project/choam"><img src="https://img.shields.io/pepy/dt/choam"></a>
 <a href="https://pypi.org/project/choam"><img src="https://img.shields.io/pypi/v/choam"></a>
 <a href="https://github.com/cowboycodr/choam"><img alt="LOC" src="https://shields.io/tokei/lines/github/cowboycodr/choam"></a>
 <a href="https://github.com/cowboycodr/choam"><img src="https://img.shields.io/github/repo-size/cowboycodr/choam"></a>
